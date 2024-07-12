@@ -1,4 +1,3 @@
-// src/pages/Home.js
 import React, { useEffect, useState } from "react";
 import unevolved from "../data/unevolved";
 import typeMapping from "../data/typeMapping";
@@ -60,7 +59,11 @@ const Home = () => {
 
   const handleStartGame = () => {
     navigate("/selected-pokemon", {
-      state: { selectedPokemon: pokemonList.filter((pokemon) => selectedPokemon.includes(pokemon.id)) },
+      state: {
+        selectedPokemon: pokemonList.filter((pokemon) =>
+          selectedPokemon.includes(pokemon.id)
+        ),
+      },
     });
   };
 
