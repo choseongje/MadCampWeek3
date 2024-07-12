@@ -5,12 +5,12 @@
   padding: 20px;
   text-align: center;
   width: 220px;
-  cursor: pointer; /* Add cursor pointer */
-  transition: transform 0.2s; /* Add transition effect */
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
 .pokemon-card:hover {
-  transform: scale(1.05); /* Add hover effect */
+  transform: scale(1.05);
 }
 
 .pokemon-card img {
@@ -37,5 +37,54 @@
 }
 
 .pokemon-card.selected {
-  border: 2px solid #4caf50; /* Add green border for selected cards */
+  border: 2px solid #4caf50;
+}
+
+.start-game-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-game-button:hover {
+  background-color: #45a049;
+}
+
+.battle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 70vh;
+  position: relative;
+}
+
+.player-side {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+}
+
+.opponent-side {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+}
+
+.opponent-image {
+  width: 150px;
+  height: 150px;
+}
+
+.pokemon-back img {
+  width: 120px;
+  height: 120px;
+  transform: scaleX(-1); /* Flip the image horizontally */
 }

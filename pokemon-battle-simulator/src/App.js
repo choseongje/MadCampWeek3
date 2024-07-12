@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import SelectedPokemon from "./pages/SelectedPokemon";
+import PokemonBattle from "./pages/PokemonBattle";
 import "./App.css";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Home />} />
-        <Route path="/selected-pokemon" element={<SelectedPokemon />} />
+        <Route path="/pokemon-battle" element={<PokemonBattle />} />
       </Routes>
     </Router>
   );

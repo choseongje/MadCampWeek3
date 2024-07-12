@@ -59,7 +59,7 @@ const Home = () => {
   };
 
   const handleStartGame = () => {
-    navigate("/selected-pokemon", {
+    navigate("/pokemon-battle", {
       state: { selectedPokemon: pokemonList.filter((pokemon) => selectedPokemon.includes(pokemon.id)) },
     });
   };
