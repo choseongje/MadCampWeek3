@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import unevolved from "./unevolved";
 import typeMapping from "./typeMapping";
+import "./App.css";
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -44,7 +45,7 @@ function App() {
       <h1>Pokémon Information</h1>
       {pokemonList.length > 0 ? (
         pokemonList.map((pokemon) => (
-          <div key={pokemon.id}>
+          <div key={pokemon.id} className="pokemon-card">
             <h2>{pokemon.koreanName}</h2>
             <img src={pokemon.sprites.front_default} alt={pokemon.koreanName} />
             <p>
@@ -56,12 +57,7 @@ function App() {
                   <img
                     src={getTypeIconUrl(typeInfo.type.name)}
                     alt={typeInfo.type.name}
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      verticalAlign: "middle",
-                      marginRight: "4px",
-                    }}
+                    className="type-icon"
                   />
                   {getTypeNameInKorean(typeInfo.type.name)}
                 </span>

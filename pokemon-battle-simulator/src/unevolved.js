@@ -53,7 +53,6 @@ const unevolved = [
   { id: 118, name: "콘치", type: "Water" },
   { id: 120, name: "별가사리", type: "Water" },
   { id: 123, name: "스라크", type: "Bug/Flying" },
-  { id: 124, name: "루주라", type: "Ice/Psychic" },
   { id: 127, name: "쁘사이저", type: "Bug" },
   { id: 128, name: "켄타로스", type: "Normal" },
   { id: 129, name: "잉어킹", type: "Water" },
