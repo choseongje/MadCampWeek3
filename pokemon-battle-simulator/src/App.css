@@ -1,8 +1,21 @@
-.App {
-  text-align: center;
-  font-family: "Arial", sans-serif;
+/* 화면 전체에 배경색을 적용 */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #f5f5f5;
-  padding: 20px;
+}
+
+/* .App 컨테이너가 전체 화면을 차지하도록 설정 */
+.App {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Arial", sans-serif;
+  text-align: center;
 }
 
 h1 {
@@ -11,36 +24,28 @@ h1 {
   margin-bottom: 20px;
 }
 
-.pokemon-card {
-  display: inline-block;
-  background-color: white;
-  border-radius: 10px;
+.pokemon-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  justify-content: center;
+  margin: 30px;
+}
+
+.start-screen {
+  margin-top: 50px;
+}
+
+.start-screen button {
+  padding: 15px 30px;
+  font-size: 18px;
+  background-color: #ffcb05;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 10px;
-  padding: 15px;
-  width: 200px;
-  text-align: center;
 }
 
-.pokemon-card img {
-  width: 100px;
-  height: 100px;
-}
-
-.pokemon-card h2 {
-  font-size: 1.2em;
-  margin: 10px 0;
-  color: #333;
-}
-
-.pokemon-card p {
-  margin: 5px 0;
-  font-size: 0.9em;
-}
-
-.type-icon {
-  width: 24px !important;
-  height: 24px !important;
-  vertical-align: middle;
-  margin-right: 4px;
+.start-screen button:hover {
+  background-color: #f0b400;
 }
