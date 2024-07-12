@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import unevolved from "./unevolved";
+import typeMapping from "./typeMapping";
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
 
   useEffect(() => {
     const fetchPokemon = async () => {
-      // 포켓몬 목록에서 랜덤으로 6마리 선택
       const selectedPokemon = [];
       while (selectedPokemon.length < 6) {
         const randomIndex = Math.floor(Math.random() * unevolved.length);
@@ -16,13 +16,13 @@ function App() {
         }
       }
 
-      // 선택된 포켓몬들의 정보 가져오기
       const promises = selectedPokemon.map((pokemon) =>
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`).then((response) => response.json())
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`).then(
+          (response) => response.json()
+        )
       );
       const data = await Promise.all(promises);
 
-      // 한글 이름을 매칭
       const dataWithKoreanNames = data.map((pokemon) => {
         const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
         return { ...pokemon, koreanName };
@@ -31,8 +31,13 @@ function App() {
       setPokemonList(dataWithKoreanNames);
     };
 
-    fetchPokemon().catch((error) => console.error("Error fetching data:", error));
+    fetchPokemon().catch((error) =>
+      console.error("Error fetching data:", error)
+    );
   }, []);
+
+  const getTypeIconUrl = (type) => `/icons/${type.toLowerCase()}.svg`;
+  const getTypeNameInKorean = (type) => typeMapping[type.toLowerCase()] || type;
 
   return (
     <div className="App">
@@ -42,9 +47,26 @@ function App() {
           <div key={pokemon.id}>
             <h2>{pokemon.koreanName}</h2>
             <img src={pokemon.sprites.front_default} alt={pokemon.koreanName} />
-            <p>Type: {pokemon.types.map((typeInfo) => typeInfo.type.name).join(", ")}</p>
-            <p>Height: {pokemon.height}</p>
-            <p>Weight: {pokemon.weight}</p>
+            <p>
+              {pokemon.types.map((typeInfo) => (
+                <span
+                  key={typeInfo.type.name}
+                  style={{ display: "inline-block", marginRight: "8px" }}
+                >
+                  <img
+                    src={getTypeIconUrl(typeInfo.type.name)}
+                    alt={typeInfo.type.name}
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      verticalAlign: "middle",
+                      marginRight: "4px",
+                    }}
+                  />
+                  {getTypeNameInKorean(typeInfo.type.name)}
+                </span>
+              ))}
+            </p>
           </div>
         ))
       ) : (

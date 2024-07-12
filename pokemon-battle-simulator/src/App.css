@@ -12,3 +12,10 @@ img {
   width: 150px;
   height: auto;
 }
+
+.type-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
