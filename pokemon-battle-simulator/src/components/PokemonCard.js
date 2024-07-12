@@ -1,8 +1,8 @@
 import React from "react";
 import "./PokemonCard.css";
 
-const PokemonCard = ({ pokemon, getTypeIconUrl, getTypeNameInKorean }) => (
-  <div className="pokemon-card">
+const PokemonCard = ({ pokemon, getTypeIconUrl, getTypeNameInKorean, isSelected, onClick }) => (
+  <div className={`pokemon-card ${isSelected ? "selected" : ""}`} onClick={onClick}>
     <h2>{pokemon.koreanName}</h2>
     <img src={pokemon.sprites.front_default} alt={pokemon.koreanName} />
     <p>

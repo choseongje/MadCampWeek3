@@ -1,73 +1,17 @@
-import React, { useEffect, useState } from "react";
-import unevolved from "./data/unevolved";
-import typeMapping from "./data/typeMapping";
-import PokemonCard from "./components/PokemonCard";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import SelectedPokemon from "./pages/SelectedPokemon";
 import "./App.css";
 
 function App() {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [gameStarted, setGameStarted] = useState(false);
-
-  useEffect(() => {
-    if (gameStarted) {
-      const fetchPokemon = async () => {
-        const selectedPokemon = [];
-        while (selectedPokemon.length < 6) {
-          const randomIndex = Math.floor(Math.random() * unevolved.length);
-          const randomPokemon = unevolved[randomIndex];
-          if (!selectedPokemon.includes(randomPokemon)) {
-            selectedPokemon.push(randomPokemon);
-          }
-        }
-
-        const promises = selectedPokemon.map((pokemon) =>
-          fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`).then(
-            (response) => response.json()
-          )
-        );
-        const data = await Promise.all(promises);
-
-        const dataWithKoreanNames = data.map((pokemon) => {
-          const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
-          return { ...pokemon, koreanName };
-        });
-
-        setPokemonList(dataWithKoreanNames);
-      };
-
-      fetchPokemon().catch((error) =>
-        console.error("Error fetching data:", error)
-      );
-    }
-  }, [gameStarted]);
-
-  const getTypeIconUrl = (type) => `/type_icons/${type.toLowerCase()}.svg`;
-  const getTypeNameInKorean = (type) => typeMapping[type.toLowerCase()] || type;
-
   return (
-    <div className="App">
-      {!gameStarted ? (
-        <div className="start-screen">
-          <h1>Pokémon Battle Simulator</h1>
-          <button onClick={() => setGameStarted(true)}>게임 시작</button>
-        </div>
-      ) : (
-        <div className="pokemon-container">
-          {pokemonList.length > 0 ? (
-            pokemonList.map((pokemon) => (
-              <PokemonCard
-                key={pokemon.id}
-                pokemon={pokemon}
-                getTypeIconUrl={getTypeIconUrl}
-                getTypeNameInKorean={getTypeNameInKorean}
-              />
-            ))
-          ) : (
-            <p>Loading...</p>
-          )}
-        </div>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route path="/selected-pokemon" element={<SelectedPokemon />} />
+      </Routes>
+    </Router>
   );
 }
 
