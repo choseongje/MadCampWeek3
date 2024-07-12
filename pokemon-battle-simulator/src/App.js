@@ -8,6 +8,7 @@ import {
 import Home from "./pages/Home";
 import SelectedPokemon from "./pages/SelectedPokemon";
 import LoginPage from "./pages/LoginPage";
+import PokemonBattle from "./pages/PokemonBattle";
 import "./App.css";
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
           element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
         />
         <Route
-          path="/selected-pokemon"
+          path="/pokemon-battle"
           element={isLoggedIn ? <SelectedPokemon /> : <Navigate to="/login" />}
         />
       </Routes>
