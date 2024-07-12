@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #ffcb05;
+  text-shadow: 2px 2px #2a75bb;
+}
+
+img {
+  width: 150px;
+  height: auto;
+}
