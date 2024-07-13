@@ -5,49 +5,84 @@ import "./LoginPage.css";
 const LoginPage = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [users, setUsers] = useState([
-    { username: "user", password: "password" },
-  ]);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUsers = JSON.parse(localStorage.getItem("users"));
-    if (storedUsers) {
-      setUsers(storedUsers);
-    }
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/users");
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = users.find(
-      (user) => user.username === username && user.password === password
-    );
-    if (user) {
-      setIsLoggedIn(true);
-      navigate("/");
-    } else {
-      alert("아이디 또는 비밀번호가 잘못되었습니다.");
+    try {
+      const response = await fetch("http://localhost:5001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setIsLoggedIn(true);
+        navigate("/");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
-  const handleRegister = () => {
-    const userExists = users.find((user) => user.username === username);
-    if (userExists) {
-      alert("이미 존재하는 아이디입니다.");
-    } else if (username && password) {
-      const newUsers = [...users, { username, password }];
-      setUsers(newUsers);
-      localStorage.setItem("users", JSON.stringify(newUsers));
-      alert("등록되었습니다. 이제 로그인할 수 있습니다.");
-    } else {
-      alert("아이디와 비밀번호를 입력하세요.");
+  const handleRegister = async () => {
+    try {
+      const response = await fetch("http://localhost:5001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (response.status === 201) {
+        alert("Registered successfully");
+        setUsers([...users, { username, password }]);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
-  const handleDelete = (usernameToDelete) => {
-    const newUsers = users.filter((user) => user.username !== usernameToDelete);
-    setUsers(newUsers);
-    localStorage.setItem("users", JSON.stringify(newUsers));
+  const handleDelete = async (usernameToDelete) => {
+    try {
+      const response = await fetch(`http://localhost:5001/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: usernameToDelete }),
+      });
+      if (response.status === 200) {
+        setUsers(users.filter((user) => user.username !== usernameToDelete));
+        alert("User deleted successfully");
+      } else {
+        alert("Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
