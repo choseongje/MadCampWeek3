@@ -9,7 +9,8 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import PokemonBattle from "./pages/PokemonBattle";
 import Evolution from "./pages/Evolution";
-import SelectPokemon from "./pages/SelectPokemon"; // Import the SelectPokemon component
+import SelectPokemon from "./pages/SelectPokemon";
+import TypeEffectivenessCalculator from "./pages/TypeEffectivenessCalculator";
 import "./App.css";
 
 function App() {
@@ -37,6 +38,16 @@ function App() {
         <Route
           path="/evolution"
           element={isLoggedIn ? <Evolution /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/type-calculator"
+          element={
+            isLoggedIn ? (
+              <TypeEffectivenessCalculator />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
     </Router>

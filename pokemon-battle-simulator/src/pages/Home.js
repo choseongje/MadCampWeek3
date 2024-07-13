@@ -9,11 +9,16 @@ const Home = () => {
     navigate("/select-pokemon");
   };
 
+  const handleTypeCalculator = () => {
+    navigate("/type-calculator");
+  };
+
   return (
     <div className="App">
       <div className="start-screen">
         <h1>Pokémon Battle Simulator</h1>
         <button onClick={handleStartGame}>게임 시작</button>
+        <button onClick={handleTypeCalculator}>타입 상성 계산기</button>
       </div>
     </div>
   );

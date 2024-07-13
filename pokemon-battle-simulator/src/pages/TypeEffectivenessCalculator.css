@@ -1,0 +1,48 @@
+.type-effectiveness-calculator {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.type-effectiveness-calculator h2 {
+  text-align: center;
+}
+
+.type-effectiveness-calculator .form-group {
+  margin-bottom: 15px;
+}
+
+.type-effectiveness-calculator label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.type-effectiveness-calculator select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.type-effectiveness-calculator button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ffcb05;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.type-effectiveness-calculator button:hover {
+  background-color: #f0b400;
+}
+
+.type-effectiveness-calculator .result {
+  margin-top: 20px;
+  font-size: 18px;
+}
