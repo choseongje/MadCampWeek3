@@ -11,7 +11,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://192.168.219.47:5001/users"); // 서버 IP 주소 사용
+        const response = await fetch("http://172.10.7.80:80/users"); // 서버 IP 주소와 포트 사용
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -25,8 +25,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://192.168.219.47:5001/login", {
-        // 서버 IP 주소 사용
+      const response = await fetch("http://172.10.7.80:80/login", {
+        // 서버 IP 주소와 포트 사용
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,8 +47,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("http://192.168.219.47:5001/register", {
-        // 서버 IP 주소 사용
+      const response = await fetch("http://172.10.7.80:80/register", {
+        // 서버 IP 주소와 포트 사용
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,8 +69,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
 
   const handleDelete = async (usernameToDelete) => {
     try {
-      const response = await fetch(`http://192.168.219.47:5001/delete`, {
-        // 서버 IP 주소 사용
+      const response = await fetch(`http://172.10.7.80:80/delete`, {
+        // 서버 IP 주소와 포트 사용
         method: "POST",
         headers: {
           "Content-Type": "application/json",
