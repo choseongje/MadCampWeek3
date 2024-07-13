@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import typeEffectiveness from "../data/typeEffectiveness";
+import typeMapping from "../data/typeMapping";
 import "../App.css";
 
 const TypeEffectivenessCalculator = () => {
@@ -27,6 +28,8 @@ const TypeEffectivenessCalculator = () => {
     }
   };
 
+  const getTypeNameInKorean = (type) => typeMapping[type.toLowerCase()] || type;
+
   return (
     <div className="App">
       <div className="type-effectiveness-calculator">
@@ -40,7 +43,7 @@ const TypeEffectivenessCalculator = () => {
             <option value="">타입 선택</option>
             {types.map((type) => (
               <option key={type} value={type}>
-                {type}
+                {getTypeNameInKorean(type)}
               </option>
             ))}
           </select>
@@ -54,7 +57,7 @@ const TypeEffectivenessCalculator = () => {
             <option value="">타입 선택</option>
             {types.map((type) => (
               <option key={type} value={type}>
-                {type}
+                {getTypeNameInKorean(type)}
               </option>
             ))}
           </select>
@@ -68,7 +71,7 @@ const TypeEffectivenessCalculator = () => {
             <option value="">타입 선택</option>
             {types.map((type) => (
               <option key={type} value={type}>
-                {type}
+                {getTypeNameInKorean(type)}
               </option>
             ))}
           </select>
