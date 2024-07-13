@@ -83,11 +83,26 @@
     margin-top: 10px;
   }
   
+  .message-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
   .effect-message {
     font-size: 1.2em;
     color: blue;
-    text-align: center;
-    margin-top: 10px;
+  }
+  
+  .game-over-message {
+    font-size: 1.2em;
+    color: red;
   }
   
   .pokemon-select {

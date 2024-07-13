@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import unevolved from "../data/unevolved";
 import typeMapping from "../data/typeMapping";
 import typeEffectiveness from "../data/typeEffectiveness";
+import evolutionData from "../data/evolutionData"; // evolutionData 가져오기
 import "./PokemonBattle.css"; // Import the CSS file
 
 const PokemonBattle = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { selectedPokemon } = location.state || { selectedPokemon: [] };
   const [opponentPokemon, setOpponentPokemon] = useState(null);
@@ -21,6 +23,9 @@ const PokemonBattle = () => {
   const [gameOver, setGameOver] = useState(false);
   const [effectMessage, setEffectMessage] = useState("");
   const [showTypeSelect, setShowTypeSelect] = useState(false);
+  const [showEffectMessage, setShowEffectMessage] = useState(false);
+  const [showGameOverMessage, setShowGameOverMessage] = useState(false);
+  const [pokemonRounds, setPokemonRounds] = useState({});
 
   useEffect(() => {
     fetchSelectedPokemon();
@@ -54,6 +59,12 @@ const PokemonBattle = () => {
     setSelectedPokemonData(dataWithKoreanNames);
     setAllPokemonData(dataWithKoreanNames); // Save all Pokemon data for future reference
     setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
+    setPokemonRounds(
+      dataWithKoreanNames.reduce((acc, pokemon) => {
+        acc[pokemon.id] = (acc[pokemon.id] || 0) + 1;
+        return acc;
+      }, pokemonRounds)
+    );
   };
 
   const getRandomOpponent = () => {
@@ -112,24 +123,46 @@ const PokemonBattle = () => {
       const multiplier = damage / playerAttack;
 
       setEffectMessage(getEffectivenessMessage(multiplier));
+      setShowEffectMessage(true);
+
+      setTimeout(() => {
+        setShowEffectMessage(false);
+      }, 1000);
 
       setOpponentHp(prevHp => {
         const newHp = Math.max(prevHp - damage, 0);
         if (newHp === 0) {
           setMessage("상대 포켓몬이 쓰러졌습니다!");
           setTimeout(() => {
-            setShowSwitchPrompt(true);
-            setShowTypeSelect(false);
-            setRound(prevRound => prevRound + 1);
-            fetchOpponentPokemon();
+            const evolvablePokemon = selectedPokemonData.filter(pokemon => {
+              const evolution = evolutionData.find(e => e.id === pokemon.id);
+              return evolution && pokemonRounds[pokemon.id] >= 10;
+            });
+
+            if (evolvablePokemon.length > 0) {
+              navigate('/evolution', { state: { selectedPokemon: selectedPokemonData, round: round + 1, pokemonRounds } });
+            } else {
+              recoverAllPokemon();
+              setShowSwitchPrompt(true);
+              setShowTypeSelect(false);
+              setRound(prevRound => prevRound + 1);
+              fetchOpponentPokemon();
+            }
           }, 1000);
         } else {
           setTimeout(() => {
             const opponentAttack = getPokemonAttack(opponentPokemon);
-            const opponentDamage = calculateDamage(opponentAttack, opponentPokemon.types[0].type.name, selectedPokemonData[0].types.map(t => t.type.name));
+            const opponentType = opponentPokemon.types[0].type.name;
+            const defenderTypes = selectedPokemonData[0].types.map(t => t.type.name);
+            const opponentDamage = calculateDamage(opponentAttack, opponentType, defenderTypes);
             const opponentMultiplier = opponentDamage / opponentAttack;
 
             setEffectMessage(getEffectivenessMessage(opponentMultiplier));
+            setShowEffectMessage(true);
+
+            setTimeout(() => {
+              setShowEffectMessage(false);
+            }, 1000);
 
             setSelectedHp(prevHp => {
               const newHp = Math.max(prevHp - opponentDamage, 0);
@@ -137,6 +170,10 @@ const PokemonBattle = () => {
                 setMessage("내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요.");
                 if (availablePokemon.length === 0) {
                   setGameOver(true);
+                  setShowGameOverMessage(true);
+                  setTimeout(() => {
+                    setShowGameOverMessage(false);
+                  }, 2000); // 게임 오버 메시지를 2초 동안 표시
                 }
               }
               return newHp;
@@ -151,7 +188,7 @@ const PokemonBattle = () => {
   const recoverAllPokemon = () => {
     const recoveredPokemon = allPokemonData.map(pokemon => ({
       ...pokemon,
-      hp: getPokemonMaxHp(pokemon)
+      currentHp: getPokemonMaxHp(pokemon)
     }));
     setAllPokemonData(recoveredPokemon);
     setAvailablePokemon(recoveredPokemon);
@@ -163,7 +200,7 @@ const PokemonBattle = () => {
       .then(response => response.json())
       .then(data => {
         const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
-        const updatedPokemon = { ...data, koreanName };
+        const updatedPokemon = { ...data, koreanName, currentHp: getPokemonMaxHp(data) };
         setSelectedPokemonData([updatedPokemon]);
         setSelectedHp(getPokemonMaxHp(updatedPokemon));
         setAvailablePokemon(availablePokemon.filter(p => p.id !== pokemon.id));
@@ -244,7 +281,16 @@ const PokemonBattle = () => {
           <p>포켓몬 데이터를 불러오는 중...</p>
         )}
       </div>
-      {effectMessage && <p className="effect-message">{effectMessage}</p>}
+      {showEffectMessage && (
+        <div className="message-box">
+          <p className="effect-message">{effectMessage}</p>
+        </div>
+      )}
+      {showGameOverMessage && (
+        <div className="message-box">
+          <p className="game-over-message">게임 오버! 모든 포켓몬이 쓰러졌습니다.</p>
+        </div>
+      )}
       {selectedHp === 0 && !gameOver && (
         <div className="pokemon-select">
           <h2>남은 포켓몬을 선택하세요</h2>
@@ -274,12 +320,6 @@ const PokemonBattle = () => {
               </button>
             ))}
           </div>
-        </div>
-      )}
-      {gameOver && (
-        <div className="game-over">
-          <h2>게임 오버!</h2>
-          <p>모든 포켓몬이 쓰러졌습니다.</p>
         </div>
       )}
       {message && <p className="message">{message}</p>}
