@@ -85,3 +85,20 @@
 .delete-button:hover {
   background-color: #ff4757;
 }
+
+/* 추가: 강제로 Home 페이지로 이동하는 버튼 스타일 */
+.force-navigate-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+  margin-top: 20px;
+}
+
+.force-navigate-button:hover {
+  background-color: #45a049;
+}

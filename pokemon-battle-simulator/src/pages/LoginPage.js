@@ -11,7 +11,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:5001/users");
+        const response = await fetch("http://192.168.219.47:5001/users"); // 서버 IP 주소 사용
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -25,7 +25,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5001/login", {
+      const response = await fetch("http://192.168.219.47:5001/login", {
+        // 서버 IP 주소 사용
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +47,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("http://localhost:5001/register", {
+      const response = await fetch("http://192.168.219.47:5001/register", {
+        // 서버 IP 주소 사용
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +69,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
 
   const handleDelete = async (usernameToDelete) => {
     try {
-      const response = await fetch(`http://localhost:5001/delete`, {
+      const response = await fetch(`http://192.168.219.47:5001/delete`, {
+        // 서버 IP 주소 사용
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,6 +86,12 @@ const LoginPage = ({ setIsLoggedIn }) => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  // 강제로 Home 페이지로 이동하는 함수
+  const handleForceNavigate = () => {
+    setIsLoggedIn(true); // 로그인 상태로 설정
+    navigate("/"); // Home 페이지로 이동
   };
 
   return (
@@ -128,6 +137,10 @@ const LoginPage = ({ setIsLoggedIn }) => {
           ))}
         </ul>
       </div>
+      {/* 강제로 Home 페이지로 이동하는 버튼 */}
+      <button onClick={handleForceNavigate} className="force-navigate-button">
+        Home 페이지로 이동
+      </button>
     </div>
   );
 };
