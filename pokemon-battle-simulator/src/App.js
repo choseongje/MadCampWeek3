@@ -8,7 +8,8 @@ import {
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import PokemonBattle from "./pages/PokemonBattle";
-import Evolution from "./pages/Evolution"; // Import the Evolution component
+import Evolution from "./pages/Evolution";
+import SelectPokemon from "./pages/SelectPokemon"; // Import the SelectPokemon component
 import "./App.css";
 
 function App() {
@@ -24,6 +25,10 @@ function App() {
         <Route
           path="/"
           element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/select-pokemon"
+          element={isLoggedIn ? <SelectPokemon /> : <Navigate to="/login" />}
         />
         <Route
           path="/pokemon-battle"
