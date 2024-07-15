@@ -33,20 +33,6 @@ const PlayerSide = ({
           alt={selectedPokemonData[0].koreanName}
         />
       </div>
-      {selectedHp > 0 && showTypeSelect && (
-        <div className="type-select-box">
-          <h3>공격 타입을 선택하세요:</h3>
-          {selectedPokemonData[0].types.map((typeInfo) => (
-            <button
-              key={typeInfo.type.name}
-              onClick={() => handleTypeSelect(typeInfo.type.name)}
-              className="type-button"
-            >
-              {getTypeNameInKorean(typeInfo.type.name)}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

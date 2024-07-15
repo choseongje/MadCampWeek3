@@ -21,15 +21,11 @@ const PokemonBattle = () => {
   const [message, setMessage] = useState("");
   const [showSwitchPrompt, setShowSwitchPrompt] = useState(false);
   const [showPokemonSelect, setShowPokemonSelect] = useState(false);
-  const [availablePokemon, setAvailablePokemon] = useState(
-    selectedPokemon.slice(1)
-  );
+  const [availablePokemon, setAvailablePokemon] = useState([]);
   const [allPokemonData, setAllPokemonData] = useState([]);
-  const [gameOver, setGameOver] = useState(false);
   const [effectMessage, setEffectMessage] = useState("");
   const [showTypeSelect, setShowTypeSelect] = useState(false);
   const [showEffectMessage, setShowEffectMessage] = useState(false);
-  const [showGameOverMessage, setShowGameOverMessage] = useState(false);
   const [pokemonRounds, setPokemonRounds] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [showTypeCalculator, setShowTypeCalculator] = useState(false);
@@ -56,6 +52,7 @@ const PokemonBattle = () => {
     setOpponentPokemon({ ...data, koreanName });
     setOpponentHp(getPokemonMaxHp(data));
     setShowSwitchPrompt(true);
+    setMessage("상대 포켓몬이 나타났다! 포켓몬을 교체하시겠습니까?");
   };
 
   const fetchSelectedPokemon = async () => {
@@ -67,7 +64,7 @@ const PokemonBattle = () => {
     const data = await Promise.all(selectedPokemonPromises);
     const dataWithKoreanNames = data.map((pokemon) => {
       const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
-      return { ...pokemon, koreanName };
+      return { ...pokemon, koreanName, currentHp: getPokemonMaxHp(pokemon) };
     });
     setPokemonRounds(
       dataWithKoreanNames.reduce((acc, pokemon) => {
@@ -78,6 +75,7 @@ const PokemonBattle = () => {
     setSelectedPokemonData(dataWithKoreanNames);
     setAllPokemonData(dataWithKoreanNames);
     setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
+    setAvailablePokemon(dataWithKoreanNames.slice(1));
   };
 
   const getRandomOpponent = () => {
@@ -135,6 +133,8 @@ const PokemonBattle = () => {
 
   const handleAttack = (attackType) => {
     if (opponentPokemon && selectedPokemonData) {
+      const attackerName = selectedPokemonData[0].koreanName;
+      setMessage(`${attackerName}의 ${getTypeNameInKorean(attackType)} 공격!`);
       setAttacking(true);
       setTimeout(() => {
         setAttacking(false);
@@ -204,13 +204,20 @@ const PokemonBattle = () => {
                 const newHp = Math.max(prevHp - opponentDamage, 0);
                 if (newHp === 0) {
                   setMessage("내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요.");
+                  setShowTypeSelect(false);
+                  setShowPokemonSelect(true);
+                  setAvailablePokemon(
+                    availablePokemon.filter((pokemon) => pokemon.currentHp > 0)
+                  );
                   if (availablePokemon.length === 0) {
-                    setGameOver(true);
-                    setShowGameOverMessage(true);
-                    setTimeout(() => {
-                      setShowGameOverMessage(false);
-                    }, 2000);
+                    setShowPokemonSelect(false);
+                    setMessage("모든 포켓몬이 쓰러졌습니다!");
                   }
+                } else {
+                  setShowSwitchPrompt(false);
+                  setShowPokemonSelect(false);
+                  setMessage("공격 타입을 선택하세요:");
+                  setShowTypeSelect(true);
                 }
                 return newHp;
               });
@@ -231,7 +238,9 @@ const PokemonBattle = () => {
       currentHp: getPokemonMaxHp(pokemon),
     }));
     setAllPokemonData(recoveredPokemon);
-    setAvailablePokemon(recoveredPokemon);
+    setAvailablePokemon(
+      recoveredPokemon.filter((pokemon) => pokemon.currentHp > 0)
+    );
     setSelectedHp(getPokemonMaxHp(selectedPokemonData[0]));
   };
 
@@ -254,22 +263,26 @@ const PokemonBattle = () => {
         setShowSwitchPrompt(false);
         setShowPokemonSelect(false);
         setShowTypeSelect(true);
+        setMessage("공격 타입을 선택하세요:");
       });
   };
 
   const handleSwitchDecision = (decision) => {
     if (decision === "yes") {
+      setShowSwitchPrompt(false);
       setShowPokemonSelect(true);
       setShowTypeSelect(false);
+      setMessage("포켓몬을 선택하세요:");
     } else {
       setShowSwitchPrompt(false);
       setShowPokemonSelect(false);
-      setMessage("");
+      setMessage("공격 타입을 선택하세요:");
       setShowTypeSelect(true);
     }
   };
 
   const handleTypeSelect = (type) => {
+    setShowTypeSelect(false);
     handleAttack(type);
   };
 
@@ -305,56 +318,43 @@ const PokemonBattle = () => {
       {showTypeCalculator && (
         <TypeCalculatorOverlay setShowTypeCalculator={setShowTypeCalculator} />
       )}
-      {showEffectMessage && (
-        <div className="message-box">
-          <p className="effect-message">{effectMessage}</p>
-        </div>
-      )}
-      {showGameOverMessage && (
-        <div className="message-box">
-          <p className="game-over-message">
-            게임 오버! 모든 포켓몬이 쓰러졌습니다.
-          </p>
-        </div>
-      )}
-      {selectedHp === 0 && !gameOver && (
-        <div className="pokemon-select">
-          <h2>남은 포켓몬을 선택하세요</h2>
+      <div className="message-box">
+        <p className="message">{message}</p>
+        {showSwitchPrompt && !showPokemonSelect && (
+          <div className="switch-prompt">
+            <button onClick={() => handleSwitchDecision("yes")}>예</button>
+            <button onClick={() => handleSwitchDecision("no")}>아니오</button>
+          </div>
+        )}
+        {showPokemonSelect && (
           <div className="pokemon-list">
-            {availablePokemon.map((pokemon) => (
+            {availablePokemon
+              .filter((pokemon) => pokemon.currentHp > 0)
+              .map((pokemon) => (
+                <button
+                  key={pokemon.id}
+                  onClick={() => handlePokemonSelect(pokemon)}
+                >
+                  {pokemon.koreanName}
+                </button>
+              ))}
+          </div>
+        )}
+        {showTypeSelect && (
+          <div className="type-select-box">
+            {selectedPokemonData[0].types.map((typeInfo) => (
               <button
-                key={pokemon.id}
-                onClick={() => handlePokemonSelect(pokemon)}
+                key={typeInfo.type.name}
+                onClick={() => handleTypeSelect(typeInfo.type.name)}
+                className="type-button"
               >
-                {pokemon.koreanName}
+                {getTypeNameInKorean(typeInfo.type.name)}
               </button>
             ))}
           </div>
-        </div>
-      )}
-      {showSwitchPrompt && !showPokemonSelect && (
-        <div className="switch-prompt">
-          <h2>포켓몬을 교체하시겠습니까?</h2>
-          <button onClick={() => handleSwitchDecision("yes")}>예</button>
-          <button onClick={() => handleSwitchDecision("no")}>아니오</button>
-        </div>
-      )}
-      {showPokemonSelect && (
-        <div className="pokemon-select">
-          <h2>포켓몬을 선택하세요</h2>
-          <div className="pokemon-list">
-            {allPokemonData.map((pokemon) => (
-              <button
-                key={pokemon.id}
-                onClick={() => handlePokemonSelect(pokemon)}
-              >
-                {pokemon.koreanName}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-      {message && <p className="message">{message}</p>}
+        )}
+        {showEffectMessage && <p className="effect-message">{effectMessage}</p>}
+      </div>
     </div>
   );
 };
