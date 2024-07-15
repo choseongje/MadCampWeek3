@@ -75,7 +75,7 @@ const PokemonBattle = () => {
     setSelectedPokemonData(dataWithKoreanNames);
     setAllPokemonData(dataWithKoreanNames);
     setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
-    setAvailablePokemon(dataWithKoreanNames.slice(1));
+    setAvailablePokemon(dataWithKoreanNames.slice(0));
   };
 
   const getRandomOpponent = () => {
@@ -108,7 +108,7 @@ const PokemonBattle = () => {
   const getPokemonMaxHp = (pokemon) => {
     const hp = getPokemonHp(pokemon);
     const defense = getPokemonDefense(pokemon);
-    return Math.floor(hp + defense); // 체력과 평균 방어력을 반영한 최대 체력
+    return Math.round(hp + defense); // 체력과 평균 방어력을 반영한 최대 체력
   };
 
   const getPokemonAttack = (pokemon) => {
@@ -120,7 +120,7 @@ const PokemonBattle = () => {
     );
     const attack = attackStat ? attackStat.base_stat : 0;
     const specialAttack = specialAttackStat ? specialAttackStat.base_stat : 0;
-    return Math.floor((attack + specialAttack) / 2); // 평균 공격력
+    return Math.round((attack + specialAttack) / 2); // 평균 공격력
   };
 
   const calculateHpPercentage = (currentHp, maxHp) => {
@@ -137,7 +137,7 @@ const PokemonBattle = () => {
         multiplier *= typeEffectiveness[attackerType][type];
       }
     });
-    return attack * multiplier;
+    return Math.round(attack * multiplier);
   };
 
   const getEffectivenessMessage = (multiplier) => {
@@ -203,6 +203,7 @@ const PokemonBattle = () => {
                 } else {
                   // 모든 포켓몬의 HP를 회복하고 다음 라운드로 진행
                   recoverAllPokemon();
+                  setShowPokemonSelect(false);
                   setShowSwitchPrompt(true);
                   setShowTypeSelect(false);
                   setRound((prevRound) => prevRound + 1);
@@ -256,12 +257,14 @@ const PokemonBattle = () => {
                           "내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요."
                         );
                         setShowTypeSelect(false);
-                        setShowPokemonSelect(true);
-                        setAvailablePokemon(
-                          availablePokemon.filter(
-                            (pokemon) => pokemon.currentHp > 0
+                        setAvailablePokemon((prevAvailable) =>
+                          prevAvailable.filter(
+                            (pokemon) =>
+                              pokemon.id !== selectedPokemonData[0].id
                           )
                         );
+                        console.log(availablePokemon);
+                        setShowPokemonSelect(true);
                         if (availablePokemon.length === 0) {
                           setMessage("모든 포켓몬이 쓰러졌습니다!");
                         }
