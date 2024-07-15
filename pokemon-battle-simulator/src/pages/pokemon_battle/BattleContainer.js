@@ -1,4 +1,5 @@
 import React from "react";
+import "./BattleContainer.css"; // CSS 파일을 import
 
 const BattleContainer = ({
   opponentPokemon,
@@ -17,21 +18,7 @@ const BattleContainer = ({
     <div className="battle-container">
       {opponentPokemon && selectedPokemonData ? (
         <>
-          <div className="opponent-side">
-            <h2>상대 포켓몬</h2>
-            <div className="hp-bar">
-              <div
-                className="hp-bar-inner"
-                style={{
-                  width: `${calculateHpPercentage(
-                    opponentHp,
-                    getPokemonMaxHp(opponentPokemon)
-                  )}%`,
-                }}
-              >
-                HP: {opponentHp} / {getPokemonMaxHp(opponentPokemon)}
-              </div>
-            </div>
+          <div className="opponent-pokemon">
             <img
               src={opponentPokemon.sprites.front_default}
               alt={opponentPokemon.koreanName}
@@ -39,32 +26,47 @@ const BattleContainer = ({
                 opponentAttacking ? "opponent-attacking" : ""
               } ${beingAttacked ? "being-attacked" : ""}`}
             />
-            <h2>{opponentPokemon.koreanName}</h2>
-          </div>
-          <div className="player-side">
-            <h2>내 포켓몬</h2>
-            <div className="hp-bar">
-              <div
-                className="hp-bar-inner"
-                style={{
-                  width: `${calculateHpPercentage(
-                    selectedHp,
-                    getPokemonMaxHp(selectedPokemonData[0])
-                  )}%`,
-                }}
-              >
-                HP: {selectedHp} / {getPokemonMaxHp(selectedPokemonData[0])}
-              </div>
+            <div className="opponent-name-container">
+              <h2 className="opponent-name">{opponentPokemon.koreanName}</h2>
             </div>
-            <div className="pokemon-back">
-              <h2>{selectedPokemonData[0].koreanName}</h2>
-              <img
-                src={selectedPokemonData[0].sprites.back_default}
-                alt={selectedPokemonData[0].koreanName}
-                className={`player-image ${attacking ? "attacking" : ""} ${
-                  opponentBeingAttacked ? "being-attacked" : ""
-                }`}
-              />
+          </div>
+          <div className="opponent-hp-bar">
+            <div
+              className="opponent-hp-bar-inner"
+              style={{
+                width: `${calculateHpPercentage(
+                  opponentHp,
+                  getPokemonMaxHp(opponentPokemon)
+                )}%`,
+              }}
+            >
+              HP: {opponentHp} / {getPokemonMaxHp(opponentPokemon)}
+            </div>
+          </div>
+          
+          <div className="player-pokemon">
+            <img
+              src={selectedPokemonData[0].sprites.back_default}
+              alt={selectedPokemonData[0].koreanName}
+              className={`player-image ${attacking ? "attacking" : ""} ${
+                opponentBeingAttacked ? "being-attacked" : ""
+              }`}
+            />
+            <div className="player-name-container">
+              <h2 className="player-name">{selectedPokemonData[0].koreanName}</h2>
+            </div>
+          </div>
+          <div className="player-hp-bar">
+            <div
+              className="player-hp-bar-inner"
+              style={{
+                width: `${calculateHpPercentage(
+                  selectedHp,
+                  getPokemonMaxHp(selectedPokemonData[0])
+                )}%`,
+              }}
+            >
+              HP: {selectedHp} / {getPokemonMaxHp(selectedPokemonData[0])}
             </div>
           </div>
         </>

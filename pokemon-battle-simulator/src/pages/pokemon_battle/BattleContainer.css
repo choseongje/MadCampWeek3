@@ -1,0 +1,116 @@
+.battle-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../../assets/images/background.jpg') no-repeat center center;
+    background-size: 65%; /* 원하는 크기로 조정 */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* 상대 포켓몬 */
+  .opponent-pokemon {
+    position: absolute;
+    top: 20%; /* 원하는 위치로 조정 */
+    left: 62%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .opponent-hp-bar {
+    position: absolute;
+    top: 14%; /* 원하는 위치로 조정 */
+    right: 55.3%;
+    width: 17%;
+    background-color: #ccc;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+  }
+  
+  .opponent-hp-bar-inner {
+    height: 20px;
+    background-color: rgba(0, 255, 140, 0.5); /* 투명도 조절 */
+  }
+  
+  .opponent-name-container {
+    position: absolute;
+    top: 0%; /* 원하는 위치로 조정 */
+    right: 450%;
+    transform: translate(0%, -137%); /* 위치를 중앙 정렬 */
+    text-align: center;
+    width: 100px; /* 고정된 너비 설정 */
+  }
+  
+  .opponent-name {
+    font-size: 30px; /* 글씨 크기 조절 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    color: #000000; /* 글씨 색상 조절 */
+  }
+  
+  /* 내 포켓몬 */
+  .player-pokemon {
+    position: absolute;
+    bottom: 20%; /* 원하는 위치로 조정 */
+    left: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .player-hp-bar {
+    position: absolute;
+    bottom: 38%; /* 원하는 위치로 조정 */
+    left: 60.7%;
+    width: 17%;
+    background-color: #ccc;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+  }
+  
+  .player-hp-bar-inner {
+    height: 20px;
+    background-color: rgba(0, 255, 140, 0.5); /* 투명도 조절 */
+  }
+  
+  .player-name-container {
+    position: absolute;
+    bottom:74%; /* 원하는 위치로 조정 */
+    left: 50%;
+    transform: translate(500%, 0); /* 위치를 중앙 정렬 */
+    text-align: center;
+    width: 100px; /* 고정된 너비 설정 */
+  }
+  
+  .player-name {
+    font-size: 30px; /* 글씨 크기 조절 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    color: #000000; /* 글씨 색상 조절 */
+  }
+  
+  .opponent-image, .player-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+  }
+  
+  .opponent-attacking, .attacking {
+    animation: attack-animation 0.5s infinite;
+  }
+  
+  .being-attacked, .opponent-being-attacked {
+    animation: being-attacked-animation 0.5s infinite;
+  }
+  
+  @keyframes attack-animation {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes being-attacked-animation {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
