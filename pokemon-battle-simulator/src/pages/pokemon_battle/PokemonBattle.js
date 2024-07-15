@@ -267,6 +267,7 @@ const PokemonBattle = () => {
                         setShowPokemonSelect(true);
                         if (availablePokemon.length === 0) {
                           setMessage("모든 포켓몬이 쓰러졌습니다!");
+                          navigate("/game-over");
                         }
                       } else {
                         // 플레이어가 다음 공격 타입을 선택할 수 있도록 메시지를 설정

@@ -11,6 +11,7 @@ import PokemonBattle from "./pages/pokemon_battle/PokemonBattle";
 import Evolution from "./pages/Evolution";
 import SelectPokemon from "./pages/SelectPokemon";
 import TypeEffectivenessCalculator from "./pages/TypeEffectivenessCalculator";
+import GameOver from "./pages/GameOver";
 import "./App.css";
 
 function App() {
@@ -48,6 +49,10 @@ function App() {
               <Navigate to="/login" />
             )
           }
+        />
+        <Route
+          path="/game-over"
+          element={isLoggedIn ? <GameOver /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
