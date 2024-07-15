@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
-import PokemonBattle from "./pages/PokemonBattle";
+import PokemonBattle from "./pages/pokemon_battle/PokemonBattle";
 import Evolution from "./pages/Evolution";
 import SelectPokemon from "./pages/SelectPokemon";
 import TypeEffectivenessCalculator from "./pages/TypeEffectivenessCalculator";
