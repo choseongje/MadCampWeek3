@@ -75,7 +75,7 @@ const PokemonBattle = () => {
     setSelectedPokemonData(dataWithKoreanNames);
     setAllPokemonData(dataWithKoreanNames);
     setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
-    setAvailablePokemon(dataWithKoreanNames.slice(1));
+    setAvailablePokemon(dataWithKoreanNames.slice(0));
   };
 
   const getRandomOpponent = () => {
@@ -91,15 +91,36 @@ const PokemonBattle = () => {
     return hpStat ? hpStat.base_stat : 0;
   };
 
+  const getPokemonDefense = (pokemon) => {
+    const defenseStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "defense"
+    );
+    const specialDefenseStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "special-defense"
+    );
+    const defense = defenseStat ? defenseStat.base_stat : 0;
+    const specialDefense = specialDefenseStat
+      ? specialDefenseStat.base_stat
+      : 0;
+    return (defense + specialDefense) / 2; // 평균 방어력
+  };
+
   const getPokemonMaxHp = (pokemon) => {
-    return getPokemonHp(pokemon) * 2;
+    const hp = getPokemonHp(pokemon);
+    const defense = getPokemonDefense(pokemon);
+    return Math.round(hp + defense); // 체력과 평균 방어력을 반영한 최대 체력
   };
 
   const getPokemonAttack = (pokemon) => {
     const attackStat = pokemon.stats.find(
       (stat) => stat.stat.name === "attack"
     );
-    return attackStat ? attackStat.base_stat : 0;
+    const specialAttackStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "special-attack"
+    );
+    const attack = attackStat ? attackStat.base_stat : 0;
+    const specialAttack = specialAttackStat ? specialAttackStat.base_stat : 0;
+    return Math.round((attack + specialAttack) / 2); // 평균 공격력
   };
 
   const calculateHpPercentage = (currentHp, maxHp) => {
@@ -116,7 +137,7 @@ const PokemonBattle = () => {
         multiplier *= typeEffectiveness[attackerType][type];
       }
     });
-    return attack * multiplier;
+    return Math.round(attack * multiplier);
   };
 
   const getEffectivenessMessage = (multiplier) => {
@@ -182,6 +203,7 @@ const PokemonBattle = () => {
                 } else {
                   // 모든 포켓몬의 HP를 회복하고 다음 라운드로 진행
                   recoverAllPokemon();
+                  setShowPokemonSelect(false);
                   setShowSwitchPrompt(true);
                   setShowTypeSelect(false);
                   setRound((prevRound) => prevRound + 1);
@@ -192,7 +214,14 @@ const PokemonBattle = () => {
               // 상대 포켓몬이 쓰러지지 않았을 경우 상대 포켓몬의 공격 실행
               setTimeout(() => {
                 const opponentAttack = getPokemonAttack(opponentPokemon);
-                const opponentType = opponentPokemon.types[0].type.name;
+                const opponentTypes = opponentPokemon.types.map(
+                  (t) => t.type.name
+                );
+                const opponentType =
+                  opponentTypes[
+                    Math.floor(Math.random() * opponentTypes.length)
+                  ]; // 랜덤 타입 선택
+
                 const defenderTypes = selectedPokemonData[0].types.map(
                   (t) => t.type.name
                 );
@@ -228,14 +257,17 @@ const PokemonBattle = () => {
                           "내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요."
                         );
                         setShowTypeSelect(false);
-                        setShowPokemonSelect(true);
-                        setAvailablePokemon(
-                          availablePokemon.filter(
-                            (pokemon) => pokemon.currentHp > 0
+                        setAvailablePokemon((prevAvailable) =>
+                          prevAvailable.filter(
+                            (pokemon) =>
+                              pokemon.id !== selectedPokemonData[0].id
                           )
                         );
+                        console.log(availablePokemon);
+                        setShowPokemonSelect(true);
                         if (availablePokemon.length === 0) {
                           setMessage("모든 포켓몬이 쓰러졌습니다!");
+                          navigate("/game-over");
                         }
                       } else {
                         // 플레이어가 다음 공격 타입을 선택할 수 있도록 메시지를 설정

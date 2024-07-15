@@ -1,0 +1,34 @@
+/* src/pages/GameOver.css */
+.game-over-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+}
+
+.game-over-container h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.game-over-container p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.game-over-container button {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background-color: #ff6347;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.game-over-container button:hover {
+  background-color: #ff4500;
+}
