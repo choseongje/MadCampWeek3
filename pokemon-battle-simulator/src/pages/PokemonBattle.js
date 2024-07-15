@@ -31,6 +31,8 @@ const PokemonBattle = () => {
   const [pokemonRounds, setPokemonRounds] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [showTypeCalculator, setShowTypeCalculator] = useState(false);
+  const [attacking, setAttacking] = useState(false);
+  const [beingAttacked, setBeingAttacked] = useState(false);
 
   useEffect(() => {
     fetchSelectedPokemon();
@@ -65,15 +67,15 @@ const PokemonBattle = () => {
       const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
       return { ...pokemon, koreanName };
     });
-    setSelectedPokemonData(dataWithKoreanNames);
-    setAllPokemonData(dataWithKoreanNames);
-    setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
     setPokemonRounds(
       dataWithKoreanNames.reduce((acc, pokemon) => {
         acc[pokemon.id] = (acc[pokemon.id] || 0) + 1;
         return acc;
-      }, pokemonRounds)
+      }, {})
     );
+    setSelectedPokemonData(dataWithKoreanNames);
+    setAllPokemonData(dataWithKoreanNames);
+    setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
   };
 
   const getRandomOpponent = () => {
@@ -131,83 +133,93 @@ const PokemonBattle = () => {
 
   const handleAttack = (attackType) => {
     if (opponentPokemon && selectedPokemonData) {
-      const playerAttack = getPokemonAttack(selectedPokemonData[0]);
-      const defenderTypes = opponentPokemon.types.map((t) => t.type.name);
-      const damage = calculateDamage(playerAttack, attackType, defenderTypes);
-      const multiplier = damage / playerAttack;
-
-      setEffectMessage(getEffectivenessMessage(multiplier));
-      setShowEffectMessage(true);
-
+      setAttacking(true);
       setTimeout(() => {
-        setShowEffectMessage(false);
-      }, 1000);
+        setAttacking(false);
+        const playerAttack = getPokemonAttack(selectedPokemonData[0]);
+        const defenderTypes = opponentPokemon.types.map((t) => t.type.name);
+        const damage = calculateDamage(playerAttack, attackType, defenderTypes);
+        const multiplier = damage / playerAttack;
 
-      setOpponentHp((prevHp) => {
-        const newHp = Math.max(prevHp - damage, 0);
-        if (newHp === 0) {
-          setMessage("상대 포켓몬이 쓰러졌습니다!");
-          setTimeout(() => {
-            const evolvablePokemon = selectedPokemonData.filter((pokemon) => {
-              const evolution = evolutionData.find((e) => e.id === pokemon.id);
-              return evolution && pokemonRounds[pokemon.id] >= 10;
-            });
+        setEffectMessage(getEffectivenessMessage(multiplier));
+        setShowEffectMessage(true);
 
-            if (evolvablePokemon.length > 0) {
-              navigate("/evolution", {
-                state: {
-                  selectedPokemon: selectedPokemonData,
-                  round: round + 1,
-                  pokemonRounds,
-                },
-              });
-            } else {
-              recoverAllPokemon();
-              setShowSwitchPrompt(true);
-              setShowTypeSelect(false);
-              setRound((prevRound) => prevRound + 1);
-              fetchOpponentPokemon();
-            }
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            const opponentAttack = getPokemonAttack(opponentPokemon);
-            const opponentType = opponentPokemon.types[0].type.name;
-            const defenderTypes = selectedPokemonData[0].types.map(
-              (t) => t.type.name
-            );
-            const opponentDamage = calculateDamage(
-              opponentAttack,
-              opponentType,
-              defenderTypes
-            );
-            const opponentMultiplier = opponentDamage / opponentAttack;
+        setTimeout(() => {
+          setShowEffectMessage(false);
+        }, 1000);
 
-            setEffectMessage(getEffectivenessMessage(opponentMultiplier));
-            setShowEffectMessage(true);
-
+        setOpponentHp((prevHp) => {
+          const newHp = Math.max(prevHp - damage, 0);
+          if (newHp === 0) {
+            setMessage("상대 포켓몬이 쓰러졌습니다!");
             setTimeout(() => {
-              setShowEffectMessage(false);
-            }, 1000);
+              const evolvablePokemon = selectedPokemonData.filter((pokemon) => {
+                const evolution = evolutionData.find(
+                  (e) => e.id === pokemon.id
+                );
+                return evolution && pokemonRounds[pokemon.id] >= 10;
+              });
 
-            setSelectedHp((prevHp) => {
-              const newHp = Math.max(prevHp - opponentDamage, 0);
-              if (newHp === 0) {
-                setMessage("내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요.");
-                if (availablePokemon.length === 0) {
-                  setGameOver(true);
-                  setShowGameOverMessage(true);
-                  setTimeout(() => {
-                    setShowGameOverMessage(false);
-                  }, 2000);
-                }
+              if (evolvablePokemon.length > 0) {
+                navigate("/evolution", {
+                  state: {
+                    selectedPokemon: selectedPokemonData,
+                    round: round + 1,
+                    pokemonRounds,
+                  },
+                });
+              } else {
+                recoverAllPokemon();
+                setShowSwitchPrompt(true);
+                setShowTypeSelect(false);
+                setRound((prevRound) => prevRound + 1);
+                fetchOpponentPokemon();
               }
-              return newHp;
-            });
-          }, 1000);
-        }
-        return newHp;
-      });
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              setBeingAttacked(true);
+              const opponentAttack = getPokemonAttack(opponentPokemon);
+              const opponentType = opponentPokemon.types[0].type.name;
+              const defenderTypes = selectedPokemonData[0].types.map(
+                (t) => t.type.name
+              );
+              const opponentDamage = calculateDamage(
+                opponentAttack,
+                opponentType,
+                defenderTypes
+              );
+              const opponentMultiplier = opponentDamage / opponentAttack;
+
+              setEffectMessage(getEffectivenessMessage(opponentMultiplier));
+              setShowEffectMessage(true);
+
+              setTimeout(() => {
+                setShowEffectMessage(false);
+              }, 1000);
+
+              setSelectedHp((prevHp) => {
+                const newHp = Math.max(prevHp - opponentDamage, 0);
+                if (newHp === 0) {
+                  setMessage("내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요.");
+                  if (availablePokemon.length === 0) {
+                    setGameOver(true);
+                    setShowGameOverMessage(true);
+                    setTimeout(() => {
+                      setShowGameOverMessage(false);
+                    }, 2000);
+                  }
+                }
+                return newHp;
+              });
+              setTimeout(() => {
+                setBeingAttacked(false);
+              }, 500);
+            }, 1000);
+          }
+          return newHp;
+        });
+      }, 500);
     }
   };
 
@@ -291,7 +303,7 @@ const PokemonBattle = () => {
               <img
                 src={opponentPokemon.sprites.front_default}
                 alt={opponentPokemon.koreanName}
-                className="opponent-image"
+                className={`opponent-image ${beingAttacked ? "blink" : ""}`}
               />
               <h2>{opponentPokemon.koreanName}</h2>
             </div>
@@ -310,7 +322,7 @@ const PokemonBattle = () => {
                   HP: {selectedHp} / {getPokemonMaxHp(selectedPokemonData[0])}
                 </div>
               </div>
-              <div className="pokemon-back">
+              <div className={`pokemon-back ${attacking ? "attack" : ""}`}>
                 <h2>{selectedPokemonData[0].koreanName}</h2>
                 <img
                   src={selectedPokemonData[0].sprites.back_default}
