@@ -33,6 +33,11 @@
     background-color: rgba(0, 255, 140, 0.5); /* 투명도 조절 */
   }
   
+  /* HP 수치를 표시하지 않도록 설정 */
+  .opponent-hp-bar-inner::after {
+    content: "";
+  }
+  
   .opponent-name-container {
     position: absolute;
     top: 0%; /* 원하는 위치로 조정 */
@@ -72,10 +77,20 @@
     height: 20px;
     background-color: rgba(0, 255, 140, 0.5); /* 투명도 조절 */
   }
+
+  /* 내 포켓몬 HP 텍스트 위치 지정 */
+  .player-hp-text {
+    position: absolute;
+    bottom: 34%; /* 원하는 위치로 조정 */
+    left: 68%;
+    font-size: 23px;
+    color: #000;
+    white-space: nowrap;
+  }
   
   .player-name-container {
     position: absolute;
-    bottom:74%; /* 원하는 위치로 조정 */
+    bottom: 74%; /* 원하는 위치로 조정 */
     left: 50%;
     transform: translate(500%, 0); /* 위치를 중앙 정렬 */
     text-align: center;
@@ -86,6 +101,19 @@
     font-size: 30px; /* 글씨 크기 조절 */
     white-space: nowrap; /* 줄바꿈 방지 */
     color: #000000; /* 글씨 색상 조절 */
+  }
+  
+  .player-hp-container {
+    position: absolute;
+    bottom: 30%; /* 원하는 위치로 조정 */
+    left: 50%;
+    transform: translate(-50%, 0); /* 위치를 중앙 정렬 */
+    text-align: center;
+  }
+  
+  .player-hp {
+    font-size: 20px; /* 글씨 크기 조절 */
+    color: #000; /* 글씨 색상 조절 */
   }
   
   .opponent-image, .player-image {
@@ -113,4 +141,3 @@
     50% { opacity: 0.5; }
     100% { opacity: 1; }
   }
-  

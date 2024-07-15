@@ -39,9 +39,7 @@ const BattleContainer = ({
                   getPokemonMaxHp(opponentPokemon)
                 )}%`,
               }}
-            >
-              HP: {opponentHp} / {getPokemonMaxHp(opponentPokemon)}
-            </div>
+            />
           </div>
           
           <div className="player-pokemon">
@@ -65,9 +63,10 @@ const BattleContainer = ({
                   getPokemonMaxHp(selectedPokemonData[0])
                 )}%`,
               }}
-            >
-              HP: {selectedHp} / {getPokemonMaxHp(selectedPokemonData[0])}
-            </div>
+            />
+          </div>
+          <div className="player-hp-text">
+            HP: {selectedHp} / {getPokemonMaxHp(selectedPokemonData[0])}
           </div>
         </>
       ) : (
