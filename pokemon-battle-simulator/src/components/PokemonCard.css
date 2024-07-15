@@ -82,9 +82,3 @@
   width: 150px;
   height: 150px;
 }
-
-.pokemon-back img {
-  width: 120px;
-  height: 120px;
-  transform: scaleX(-1); /* Flip the image horizontally */
-}

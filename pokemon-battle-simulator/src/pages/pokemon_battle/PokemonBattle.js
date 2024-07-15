@@ -23,14 +23,14 @@ const PokemonBattle = () => {
   const [showPokemonSelect, setShowPokemonSelect] = useState(false);
   const [availablePokemon, setAvailablePokemon] = useState([]);
   const [allPokemonData, setAllPokemonData] = useState([]);
-  const [effectMessage, setEffectMessage] = useState("");
   const [showTypeSelect, setShowTypeSelect] = useState(false);
-  const [showEffectMessage, setShowEffectMessage] = useState(false);
   const [pokemonRounds, setPokemonRounds] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [showTypeCalculator, setShowTypeCalculator] = useState(false);
   const [attacking, setAttacking] = useState(false);
   const [beingAttacked, setBeingAttacked] = useState(false);
+  const [opponentAttacking, setOpponentAttacking] = useState(false);
+  const [opponentBeingAttacked, setOpponentBeingAttacked] = useState(false);
 
   useEffect(() => {
     fetchSelectedPokemon();
@@ -134,8 +134,12 @@ const PokemonBattle = () => {
   const handleAttack = (attackType) => {
     if (opponentPokemon && selectedPokemonData) {
       const attackerName = selectedPokemonData[0].koreanName;
+
+      // 플레이어 포켓몬의 공격 메시지를 설정
       setMessage(`${attackerName}의 ${getTypeNameInKorean(attackType)} 공격!`);
       setAttacking(true);
+
+      // 0.5초 후 공격을 실행
       setTimeout(() => {
         setAttacking(false);
         const playerAttack = getPokemonAttack(selectedPokemonData[0]);
@@ -143,91 +147,110 @@ const PokemonBattle = () => {
         const damage = calculateDamage(playerAttack, attackType, defenderTypes);
         const multiplier = damage / playerAttack;
 
-        setEffectMessage(getEffectivenessMessage(multiplier));
-        setShowEffectMessage(true);
+        // 공격의 효과 메시지를 설정
+        setMessage(getEffectivenessMessage(multiplier));
+        setBeingAttacked(true);
 
+        // 0.5초 후 상대 포켓몬의 HP를 업데이트
         setTimeout(() => {
-          setShowEffectMessage(false);
-        }, 1000);
+          setBeingAttacked(false);
+          setOpponentHp((prevHp) => {
+            const newHp = Math.max(prevHp - damage, 0);
 
-        setOpponentHp((prevHp) => {
-          const newHp = Math.max(prevHp - damage, 0);
-          if (newHp === 0) {
-            setMessage("상대 포켓몬이 쓰러졌습니다!");
-            setTimeout(() => {
-              const evolvablePokemon = selectedPokemonData.filter((pokemon) => {
-                const evolution = evolutionData.find(
-                  (e) => e.id === pokemon.id
-                );
-                return evolution && pokemonRounds[pokemon.id] >= 10;
-              });
-
-              if (evolvablePokemon.length > 0) {
-                navigate("/evolution", {
-                  state: {
-                    selectedPokemon: selectedPokemonData,
-                    round: round + 1,
-                    pokemonRounds,
-                  },
-                });
-              } else {
-                recoverAllPokemon();
-                setShowSwitchPrompt(true);
-                setShowTypeSelect(false);
-                setRound((prevRound) => prevRound + 1);
-                fetchOpponentPokemon();
-              }
-            }, 1000);
-          } else {
-            setTimeout(() => {
-              setBeingAttacked(true);
-              const opponentAttack = getPokemonAttack(opponentPokemon);
-              const opponentType = opponentPokemon.types[0].type.name;
-              const defenderTypes = selectedPokemonData[0].types.map(
-                (t) => t.type.name
-              );
-              const opponentDamage = calculateDamage(
-                opponentAttack,
-                opponentType,
-                defenderTypes
-              );
-              const opponentMultiplier = opponentDamage / opponentAttack;
-
-              setEffectMessage(getEffectivenessMessage(opponentMultiplier));
-              setShowEffectMessage(true);
-
+            if (newHp === 0) {
+              // 상대 포켓몬이 쓰러졌을 때의 메시지를 설정
+              setMessage("상대 포켓몬이 쓰러졌습니다!");
               setTimeout(() => {
-                setShowEffectMessage(false);
-              }, 1000);
-
-              setSelectedHp((prevHp) => {
-                const newHp = Math.max(prevHp - opponentDamage, 0);
-                if (newHp === 0) {
-                  setMessage("내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요.");
-                  setShowTypeSelect(false);
-                  setShowPokemonSelect(true);
-                  setAvailablePokemon(
-                    availablePokemon.filter((pokemon) => pokemon.currentHp > 0)
-                  );
-                  if (availablePokemon.length === 0) {
-                    setShowPokemonSelect(false);
-                    setMessage("모든 포켓몬이 쓰러졌습니다!");
+                const evolvablePokemon = selectedPokemonData.filter(
+                  (pokemon) => {
+                    const evolution = evolutionData.find(
+                      (e) => e.id === pokemon.id
+                    );
+                    return evolution && pokemonRounds[pokemon.id] >= 10;
                   }
+                );
+
+                // 진화할 수 있는 포켓몬이 있을 경우 진화 페이지로 이동
+                if (evolvablePokemon.length > 0) {
+                  navigate("/evolution", {
+                    state: {
+                      selectedPokemon: selectedPokemonData,
+                      round: round + 1,
+                      pokemonRounds,
+                    },
+                  });
                 } else {
-                  setShowSwitchPrompt(false);
-                  setShowPokemonSelect(false);
-                  setMessage("공격 타입을 선택하세요:");
-                  setShowTypeSelect(true);
+                  // 모든 포켓몬의 HP를 회복하고 다음 라운드로 진행
+                  recoverAllPokemon();
+                  setShowSwitchPrompt(true);
+                  setShowTypeSelect(false);
+                  setRound((prevRound) => prevRound + 1);
+                  fetchOpponentPokemon();
                 }
-                return newHp;
-              });
+              }, 1000);
+            } else {
+              // 상대 포켓몬이 쓰러지지 않았을 경우 상대 포켓몬의 공격 실행
               setTimeout(() => {
-                setBeingAttacked(false);
+                const opponentAttack = getPokemonAttack(opponentPokemon);
+                const opponentType = opponentPokemon.types[0].type.name;
+                const defenderTypes = selectedPokemonData[0].types.map(
+                  (t) => t.type.name
+                );
+                const opponentDamage = calculateDamage(
+                  opponentAttack,
+                  opponentType,
+                  defenderTypes
+                );
+                const opponentMultiplier = opponentDamage / opponentAttack;
+
+                // 상대 포켓몬의 공격 메시지를 설정
+                setMessage(
+                  `${opponentPokemon.koreanName}의 ${getTypeNameInKorean(
+                    opponentType
+                  )} 공격!`
+                );
+                setOpponentAttacking(true);
+
+                // 0.5초 후 상대 포켓몬의 공격 효과 메시지를 설정
+                setTimeout(() => {
+                  setOpponentAttacking(false);
+                  setMessage(getEffectivenessMessage(opponentMultiplier));
+                  setOpponentBeingAttacked(true);
+
+                  // 0.5초 후 플레이어 포켓몬의 HP를 업데이트
+                  setTimeout(() => {
+                    setOpponentBeingAttacked(false);
+                    setSelectedHp((prevHp) => {
+                      const newHp = Math.max(prevHp - opponentDamage, 0);
+                      if (newHp === 0) {
+                        // 플레이어 포켓몬이 쓰러졌을 때의 메시지를 설정
+                        setMessage(
+                          "내 포켓몬이 쓰러졌습니다! 포켓몬을 선택하세요."
+                        );
+                        setShowTypeSelect(false);
+                        setShowPokemonSelect(true);
+                        setAvailablePokemon(
+                          availablePokemon.filter(
+                            (pokemon) => pokemon.currentHp > 0
+                          )
+                        );
+                        if (availablePokemon.length === 0) {
+                          setMessage("모든 포켓몬이 쓰러졌습니다!");
+                        }
+                      } else {
+                        // 플레이어가 다음 공격 타입을 선택할 수 있도록 메시지를 설정
+                        setMessage("공격 타입을 선택하세요:");
+                        setShowTypeSelect(true);
+                      }
+                      return newHp;
+                    });
+                  }, 500);
+                }, 500);
               }, 500);
-            }, 1000);
-          }
-          return newHp;
-        });
+            }
+            return newHp;
+          });
+        }, 500);
       }, 500);
     }
   };
@@ -259,11 +282,14 @@ const PokemonBattle = () => {
         setAvailablePokemon(
           availablePokemon.filter((p) => p.id !== pokemon.id)
         );
-        setMessage("");
+        setMessage(`가랏! ${koreanName}!`);
         setShowSwitchPrompt(false);
         setShowPokemonSelect(false);
-        setShowTypeSelect(true);
-        setMessage("공격 타입을 선택하세요:");
+        setShowTypeSelect(false);
+        setTimeout(() => {
+          setShowTypeSelect(true);
+          setMessage("공격 타입을 선택하세요:");
+        }, 1000);
       });
   };
 
@@ -304,11 +330,13 @@ const PokemonBattle = () => {
         selectedHp={selectedHp}
         calculateHpPercentage={calculateHpPercentage}
         getPokemonMaxHp={getPokemonMaxHp}
-        attacking={attacking}
-        beingAttacked={beingAttacked}
         handleTypeSelect={handleTypeSelect}
         showTypeSelect={showTypeSelect}
         getTypeNameInKorean={getTypeNameInKorean}
+        attacking={attacking}
+        beingAttacked={beingAttacked}
+        opponentAttacking={opponentAttacking}
+        opponentBeingAttacked={opponentBeingAttacked}
       />
       <Sidebar
         showSidebar={showSidebar}
@@ -353,7 +381,6 @@ const PokemonBattle = () => {
             ))}
           </div>
         )}
-        {showEffectMessage && <p className="effect-message">{effectMessage}</p>}
       </div>
     </div>
   );
