@@ -27,6 +27,7 @@
 .pokemon-card p {
   margin: 10px 0;
   font-size: 1em;
+  color: #333;
 }
 
 .type-icon {
@@ -54,31 +55,4 @@
 
 .start-game-button:hover {
   background-color: #45a049;
-}
-
-.battle-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 70vh;
-  position: relative;
-}
-
-.player-side {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-}
-
-.opponent-side {
-  position: absolute;
-  top: 0;
-  right: 0;
-  text-align: center;
-}
-
-.opponent-image {
-  width: 150px;
-  height: 150px;
 }
