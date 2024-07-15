@@ -91,15 +91,36 @@ const PokemonBattle = () => {
     return hpStat ? hpStat.base_stat : 0;
   };
 
+  const getPokemonDefense = (pokemon) => {
+    const defenseStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "defense"
+    );
+    const specialDefenseStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "special-defense"
+    );
+    const defense = defenseStat ? defenseStat.base_stat : 0;
+    const specialDefense = specialDefenseStat
+      ? specialDefenseStat.base_stat
+      : 0;
+    return (defense + specialDefense) / 2; // 평균 방어력
+  };
+
   const getPokemonMaxHp = (pokemon) => {
-    return getPokemonHp(pokemon) * 2;
+    const hp = getPokemonHp(pokemon);
+    const defense = getPokemonDefense(pokemon);
+    return Math.floor(hp + defense); // 체력과 평균 방어력을 반영한 최대 체력
   };
 
   const getPokemonAttack = (pokemon) => {
     const attackStat = pokemon.stats.find(
       (stat) => stat.stat.name === "attack"
     );
-    return attackStat ? attackStat.base_stat : 0;
+    const specialAttackStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "special-attack"
+    );
+    const attack = attackStat ? attackStat.base_stat : 0;
+    const specialAttack = specialAttackStat ? specialAttackStat.base_stat : 0;
+    return Math.floor((attack + specialAttack) / 2); // 평균 공격력
   };
 
   const calculateHpPercentage = (currentHp, maxHp) => {
@@ -192,7 +213,14 @@ const PokemonBattle = () => {
               // 상대 포켓몬이 쓰러지지 않았을 경우 상대 포켓몬의 공격 실행
               setTimeout(() => {
                 const opponentAttack = getPokemonAttack(opponentPokemon);
-                const opponentType = opponentPokemon.types[0].type.name;
+                const opponentTypes = opponentPokemon.types.map(
+                  (t) => t.type.name
+                );
+                const opponentType =
+                  opponentTypes[
+                    Math.floor(Math.random() * opponentTypes.length)
+                  ]; // 랜덤 타입 선택
+
                 const defenderTypes = selectedPokemonData[0].types.map(
                   (t) => t.type.name
                 );
