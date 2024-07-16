@@ -15,23 +15,25 @@
 }
 
 .message {
-  font-size: 1.2em;
-  color: black;
+  position: absolute;
+  top: 80%;
+  left: -1050%;
+  font-size: 2.2em;
+  color: white;
   text-align: center;
   margin-top: 10px;
+  white-space: nowrap; /* Prevent line breaks */
 }
 
 .message-box {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  top: 64%;
+  left: 45%;
+  transform: translateX(-50%);
+  width: auto;
   height: 100px;
-  background-color: white;
-  border-top: 1px solid #ddd;
   text-align: center;
   padding: 20px;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .pokemon-select {
@@ -41,48 +43,54 @@
 
 .pokemon-list {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 10px;
+  position: fixed;
+  right: -1400%;
+  top: 70%;
 }
 
-.pokemon-list button {
-  padding: 10px;
-  font-size: 1em;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.switch-prompt {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  position: fixed;
+  right: -1450%;
+  top: 90%;
 }
 
-.pokemon-list button:hover {
-  background-color: #45a049;
-}
-
-.switch-prompt,
 .type-select-box {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 10px;
-  margin-top: 10px;
+  position: fixed;
+  right: -1300%;
+  top: 90%;
 }
 
+.pokemon-list button,
 .switch-prompt button,
 .type-select-box button {
-  padding: 10px 20px;
-  font-size: 1em;
-  background-color: #4caf50;
+  padding: 1px;
+  font-size: 2.2em;
+  background-color: #ffffff00;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  white-space: nowrap; /* Prevent line breaks */
 }
 
+.pokemon-list button:hover,
 .switch-prompt button:hover,
 .type-select-box button:hover {
-  background-color: #45a049;
+  background-color: #ffffff00;
 }
 
 .sidebar {

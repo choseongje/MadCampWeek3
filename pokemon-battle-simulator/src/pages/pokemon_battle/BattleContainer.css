@@ -12,7 +12,7 @@
 .opponent-pokemon {
   position: absolute;
   top: 20%; /* 원하는 위치로 조정 */
-  left: 62%;
+  left: 66%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,9 +20,9 @@
 
 .opponent-hp-bar {
   position: absolute;
-  top: 14%; /* 원하는 위치로 조정 */
-  right: 55.3%;
-  width: 17%;
+  top: 16.9%; /* 원하는 위치로 조정 */
+  right: 58.3%;
+  width: 25%;
   background-color: #ccc;
   border: 1px solid #000;
   margin-bottom: 10px;
@@ -41,8 +41,8 @@
 .opponent-name-container {
   position: absolute;
   top: 0%; /* 원하는 위치로 조정 */
-  right: 450%;
-  transform: translate(0%, -137%); /* 위치를 중앙 정렬 */
+  right: 340%;
+  transform: translate(0%, -117%); /* 위치를 중앙 정렬 */
   text-align: center;
   width: 100px; /* 고정된 너비 설정 */
 }
@@ -56,8 +56,8 @@
 /* 내 포켓몬 */
 .player-pokemon {
   position: absolute;
-  bottom: 20%; /* 원하는 위치로 조정 */
-  left: 30%;
+  bottom: 25%; /* 원하는 위치로 조정 */
+  left: 20%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,9 +65,9 @@
 
 .player-hp-bar {
   position: absolute;
-  bottom: 38%; /* 원하는 위치로 조정 */
-  left: 60.7%;
-  width: 17%;
+  bottom: 39%; /* 원하는 위치로 조정 */
+  left: 67.5%;
+  width: 25%;
   background-color: #ccc;
   border: 1px solid #000;
   margin-bottom: 10px;
@@ -81,8 +81,8 @@
 /* 내 포켓몬 HP 텍스트 위치 지정 */
 .player-hp-text {
   position: absolute;
-  bottom: 34%; /* 원하는 위치로 조정 */
-  left: 68%;
+  bottom: 34.7%; /* 원하는 위치로 조정 */
+  left: 78%;
   font-size: 23px;
   color: #000;
   white-space: nowrap;
@@ -90,7 +90,7 @@
 
 .player-name-container {
   position: absolute;
-  bottom: 74%; /* 원하는 위치로 조정 */
+  bottom: 63%; /* 원하는 위치로 조정 */
   left: 50%;
   transform: translate(500%, 0); /* 위치를 중앙 정렬 */
   text-align: center;
