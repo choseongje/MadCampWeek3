@@ -15,23 +15,40 @@ const PokemonDetail = ({ pokemon, onClose }) => {
       const speciesData = await speciesResponse.json();
       const evolutionResponse = await fetch(speciesData.evolution_chain.url);
       const evolutionData = await evolutionResponse.json();
-      const chain = [];
-      let current = evolutionData.chain;
-      do {
-        const res = await fetch(current.species.url);
-        const data = await res.json();
-        const koreanName = data.names.find(
-          (name) => name.language.name === "ko"
-        ).name;
-        const pokemonId = current.species.url.split("/").filter(Boolean).pop();
-        chain.push({
-          id: pokemonId,
-          name: koreanName,
-          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`,
-        });
-        current = current.evolves_to[0];
-      } while (current);
-      setEvolutionChain(chain);
+
+      const getEvolutionChain = (chain) => {
+        const chainArray = [];
+        const traverseChain = (node, chainArray) => {
+          const pokemonId = node.species.url.split("/").filter(Boolean).pop();
+          chainArray.push({
+            id: pokemonId,
+            name: node.species.name,
+            image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`,
+          });
+          if (node.evolves_to.length > 0) {
+            node.evolves_to.forEach((evolution) =>
+              traverseChain(evolution, chainArray)
+            );
+          }
+        };
+        traverseChain(chain, chainArray);
+        return chainArray;
+      };
+
+      const chain = getEvolutionChain(evolutionData.chain);
+      const detailedChain = await Promise.all(
+        chain.map(async (pokemon) => {
+          const res = await fetch(
+            `https://pokeapi.co/api/v2/pokemon-species/${pokemon.id}`
+          );
+          const data = await res.json();
+          const koreanName = data.names.find(
+            (name) => name.language.name === "ko"
+          ).name;
+          return { ...pokemon, name: koreanName };
+        })
+      );
+      setEvolutionChain(detailedChain);
     };
 
     const fetchBaseStats = () => {
