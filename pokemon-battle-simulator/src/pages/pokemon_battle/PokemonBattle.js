@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import unevolved from "../../data/unevolved";
+import legendary from "../../data/legendary"; // 전설의 포켓몬 데이터 가져오기
 import typeMapping from "../../data/typeMapping";
 import typeEffectiveness from "../../data/typeEffectiveness";
 import "./PokemonBattle.css";
@@ -57,7 +58,10 @@ const PokemonBattle = () => {
       `https://pokeapi.co/api/v2/pokemon/${opponent.id}`
     );
     const data = await response.json();
-    const koreanName = unevolved.find((p) => p.id === opponent.id).name;
+    const koreanName =
+      unevolved.find((p) => p.id === opponent.id)?.name ||
+      legendary.find((p) => p.id === opponent.id)?.name ||
+      opponent.name;
     setOpponentPokemon({ ...data, koreanName });
     setOpponentHp(getPokemonMaxHp(data));
     setShowSwitchPrompt(true);
@@ -72,7 +76,7 @@ const PokemonBattle = () => {
     );
     const data = await Promise.all(selectedPokemonPromises);
     const dataWithKoreanNames = data.map((pokemon) => {
-      const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
+      const koreanName = unevolved.find((p) => p.id === pokemon.id)?.name;
       return { ...pokemon, koreanName, currentHp: getPokemonMaxHp(pokemon) };
     });
     setSelectedPokemonData(dataWithKoreanNames);
@@ -81,8 +85,16 @@ const PokemonBattle = () => {
   };
 
   const getRandomOpponent = () => {
-    const randomIndex = Math.floor(Math.random() * unevolved.length);
-    return unevolved[randomIndex];
+    console.log(`Current Round: ${round}`);
+    if ((round + 1) % 5 === 0 && round !== 1) {
+      const randomIndex = Math.floor(Math.random() * legendary.length);
+      console.log("Selected Legendary Pokemon");
+      return legendary[randomIndex];
+    } else {
+      const randomIndex = Math.floor(Math.random() * unevolved.length);
+      console.log("Selected Unevolved Pokemon");
+      return unevolved[randomIndex];
+    }
   };
 
   const getTypeIconUrl = (type) => `/type_icons/${type.toLowerCase()}.svg`;
@@ -94,16 +106,12 @@ const PokemonBattle = () => {
   };
 
   const getPokemonDefense = (pokemon) => {
-    const defenseStat = pokemon.stats.find(
-      (stat) => stat.stat.name === "defense"
-    );
+    const defenseStat = pokemon.stats.find((stat) => stat.stat.name === "defense");
     const specialDefenseStat = pokemon.stats.find(
       (stat) => stat.stat.name === "special-defense"
     );
     const defense = defenseStat ? defenseStat.base_stat : 0;
-    const specialDefense = specialDefenseStat
-      ? specialDefenseStat.base_stat
-      : 0;
+    const specialDefense = specialDefenseStat ? specialDefenseStat.base_stat : 0;
     return (defense + specialDefense) / 2; // 평균 방어력
   };
 
@@ -114,9 +122,7 @@ const PokemonBattle = () => {
   };
 
   const getPokemonAttack = (pokemon) => {
-    const attackStat = pokemon.stats.find(
-      (stat) => stat.stat.name === "attack"
-    );
+    const attackStat = pokemon.stats.find((stat) => stat.stat.name === "attack");
     const specialAttackStat = pokemon.stats.find(
       (stat) => stat.stat.name === "special-attack"
     );
@@ -291,7 +297,7 @@ const PokemonBattle = () => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.id}`)
       .then((response) => response.json())
       .then((data) => {
-        const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
+        const koreanName = unevolved.find((p) => p.id === pokemon.id)?.name;
         const updatedPokemon = {
           ...data,
           koreanName,
@@ -315,10 +321,6 @@ const PokemonBattle = () => {
         }, 1000);
       });
   };
-
-  useEffect(() => {
-    console.log(selectedPokemonData);
-  }, [selectedPokemonData]);
 
   const handleSwitchDecision = (decision) => {
     if (decision === "yes") {
