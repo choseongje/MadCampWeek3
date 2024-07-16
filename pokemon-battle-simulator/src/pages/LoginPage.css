@@ -1,3 +1,12 @@
+/* src/pages/LoginPage.css */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
 .login-form {
   background-color: white;
   padding: 20px;
@@ -101,4 +110,31 @@
 
 .force-navigate-button:hover {
   background-color: #45a049;
+}
+
+/* 포켓볼 애니메이션 */
+.pokeball-animation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-image: url("../assets/images/pokeball.svg"); /* 포켓볼 이미지 경로 */
+  background-size: cover;
+  transform: translate(-50%, -50%);
+  animation: pokeball-grow 2s ease-in-out;
+  z-index: 1000;
+}
+
+@keyframes pokeball-grow {
+  0% {
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+  }
+  100% {
+    width: 150vw;
+    height: 150vw;
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+  }
 }

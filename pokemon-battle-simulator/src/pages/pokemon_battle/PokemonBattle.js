@@ -221,7 +221,8 @@ const PokemonBattle = () => {
                   opponentTypes[
                     Math.floor(Math.random() * opponentTypes.length)
                   ]; // 랜덤 타입 선택
-
+                console.log(opponentTypes);
+                console.log(opponentType);
                 const defenderTypes = selectedPokemonData[0].types.map(
                   (t) => t.type.name
                 );
@@ -263,11 +264,24 @@ const PokemonBattle = () => {
                               pokemon.id !== selectedPokemonData[0].id
                           )
                         );
-                        console.log(availablePokemon);
                         setShowPokemonSelect(true);
                         if (availablePokemon.length === 0) {
                           setMessage("모든 포켓몬이 쓰러졌습니다!");
-                          navigate("/game-over");
+                          const pokemonData = selectedPokemonData.map(
+                            (pokemon) => ({
+                              id: pokemon.id,
+                              koreanName: pokemon.koreanName,
+                              sprites: pokemon.sprites,
+                              types: pokemon.types,
+                            })
+                          );
+
+                          navigate("/game-over", {
+                            state: {
+                              round,
+                              selectedPokemon: pokemonData,
+                            },
+                          });
                         }
                       } else {
                         // 플레이어가 다음 공격 타입을 선택할 수 있도록 메시지를 설정
@@ -352,6 +366,22 @@ const PokemonBattle = () => {
     setShowTypeCalculator(true);
   };
 
+  const handleSurrender = () => {
+    const pokemonData = selectedPokemonData.map((pokemon) => ({
+      id: pokemon.id,
+      koreanName: pokemon.koreanName,
+      sprites: pokemon.sprites,
+      types: pokemon.types,
+    }));
+
+    navigate("/game-over", {
+      state: {
+        round,
+        selectedPokemon: pokemonData,
+      },
+    });
+  };
+
   return (
     <div className="App">
       <h1>포켓몬 배틀 - 라운드 {round}</h1>
@@ -374,6 +404,7 @@ const PokemonBattle = () => {
         showSidebar={showSidebar}
         toggleSidebar={toggleSidebar}
         handleTypeCalculator={handleTypeCalculator}
+        handleSurrender={handleSurrender}
       />
       {showTypeCalculator && (
         <TypeCalculatorOverlay setShowTypeCalculator={setShowTypeCalculator} />

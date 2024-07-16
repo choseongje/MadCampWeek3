@@ -1,16 +1,25 @@
-import React from "react";
+// src/pages/Home.js
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+import "./Home.css";
 
 const Home = () => {
+  const [showAnimation, setShowAnimation] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowAnimation(false);
+    }, 2000); // 애니메이션 시간 (2초)
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleStartGame = () => {
     navigate("/select-pokemon");
   };
 
-  const handleTypeCalculator = () => {
-    navigate("/type-calculator");
+  const handlePokedex = () => {
+    navigate("/pokedex");
   };
 
   return (
@@ -18,8 +27,9 @@ const Home = () => {
       <div className="start-screen">
         <h1>Pokémon Battle Simulator</h1>
         <button onClick={handleStartGame}>게임 시작</button>
-        <button onClick={handleTypeCalculator}>타입 상성 계산기</button>
+        <button onClick={handlePokedex}>포켓몬 도감</button>
       </div>
+      {showAnimation && <div className="pokeball-animation-close"></div>}
     </div>
   );
 };

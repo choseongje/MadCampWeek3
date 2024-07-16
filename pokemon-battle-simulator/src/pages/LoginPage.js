@@ -1,3 +1,4 @@
+// src/pages/LoginPage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
@@ -6,6 +7,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [users, setUsers] = useState([]);
+  const [showAnimation, setShowAnimation] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,8 +37,11 @@ const LoginPage = ({ setIsLoggedIn }) => {
       });
       const data = await response.json();
       if (response.status === 200) {
-        setIsLoggedIn(true);
-        navigate("/");
+        setShowAnimation(true);
+        setTimeout(() => {
+          setIsLoggedIn(true);
+          navigate("/");
+        }, 2000); // 애니메이션 시간 (2초)
       } else {
         alert(data.message);
       }
@@ -90,57 +95,63 @@ const LoginPage = ({ setIsLoggedIn }) => {
 
   // 강제로 Home 페이지로 이동하는 함수
   const handleForceNavigate = () => {
-    setIsLoggedIn(true); // 로그인 상태로 설정
-    navigate("/"); // Home 페이지로 이동
+    setShowAnimation(true);
+    setTimeout(() => {
+      setIsLoggedIn(true);
+      navigate("/");
+    }, 2000); // 애니메이션 시간 (2초)
   };
 
   return (
-    <div className="login-form">
-      <h2>로그인</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>이름</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+    <div className="login-container">
+      <div className="login-form">
+        <h2>로그인</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>이름</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label>비밀번호</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="button-group">
+            <button type="submit">로그인</button>
+            <button type="button" onClick={handleRegister}>
+              등록
+            </button>
+          </div>
+        </form>
+        <div className="registered-users">
+          <h3>등록된 사용자</h3>
+          <ul>
+            {users.map((user, index) => (
+              <li key={index}>
+                {user.username} / {user.password}
+                <button
+                  onClick={() => handleDelete(user.username)}
+                  className="delete-button"
+                >
+                  삭제
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="form-group">
-          <label>비밀번호</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="button-group">
-          <button type="submit">로그인</button>
-          <button type="button" onClick={handleRegister}>
-            등록
-          </button>
-        </div>
-      </form>
-      <div className="registered-users">
-        <h3>등록된 사용자</h3>
-        <ul>
-          {users.map((user, index) => (
-            <li key={index}>
-              {user.username} / {user.password}
-              <button
-                onClick={() => handleDelete(user.username)}
-                className="delete-button"
-              >
-                삭제
-              </button>
-            </li>
-          ))}
-        </ul>
+        {/* 강제로 Home 페이지로 이동하는 버튼 */}
+        <button onClick={handleForceNavigate} className="force-navigate-button">
+          Home 페이지로 이동
+        </button>
       </div>
-      {/* 강제로 Home 페이지로 이동하는 버튼 */}
-      <button onClick={handleForceNavigate} className="force-navigate-button">
-        Home 페이지로 이동
-      </button>
+      {showAnimation && <div className="pokeball-animation"></div>}
     </div>
   );
 };

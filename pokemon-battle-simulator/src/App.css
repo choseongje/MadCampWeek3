@@ -1,3 +1,4 @@
+/* src/App.css */
 /* 화면 전체에 배경색을 적용 */
 html,
 body {
@@ -18,34 +19,11 @@ body {
   text-align: center;
 }
 
-h1 {
-  color: #ffcb05;
-  text-shadow: 2px 2px #2a75bb;
-  margin-bottom: 20px;
-}
-
+/* 포켓몬 컨테이너 */
 .pokemon-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   justify-content: center;
   margin: 30px;
-}
-
-.start-screen {
-  margin-top: 50px;
-}
-
-.start-screen button {
-  padding: 15px 30px;
-  font-size: 18px;
-  background-color: #ffcb05;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.start-screen button:hover {
-  background-color: #f0b400;
 }
