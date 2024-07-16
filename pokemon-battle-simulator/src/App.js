@@ -12,6 +12,7 @@ import Evolution from "./pages/Evolution";
 import SelectPokemon from "./pages/SelectPokemon";
 import TypeEffectivenessCalculator from "./pages/TypeEffectivenessCalculator";
 import GameOver from "./pages/GameOver";
+import Pokedex from "./pages/pokedex/Pokedex";
 import "./App.css";
 
 function App() {
@@ -53,6 +54,10 @@ function App() {
         <Route
           path="/game-over"
           element={isLoggedIn ? <GameOver /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/pokedex"
+          element={isLoggedIn ? <Pokedex /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>

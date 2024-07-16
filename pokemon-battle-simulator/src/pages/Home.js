@@ -9,11 +9,16 @@ const Home = () => {
     navigate("/select-pokemon");
   };
 
+  const handlePokedex = () => {
+    navigate("/pokedex");
+  };
+
   return (
     <div className="App">
       <div className="start-screen">
         <h1>Pokémon Battle Simulator</h1>
         <button onClick={handleStartGame}>게임 시작</button>
+        <button onClick={handlePokedex}>포켓몬 도감</button>
       </div>
     </div>
   );

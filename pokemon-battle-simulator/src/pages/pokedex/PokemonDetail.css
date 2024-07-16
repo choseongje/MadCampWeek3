@@ -1,0 +1,26 @@
+/* src/components/PokemonDetail.css */
+.pokemon-detail {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1000;
+}
+
+.pokemon-detail button {
+  background-color: #ffcb05;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.pokemon-detail button:hover {
+  background-color: #f0b400;
+}
