@@ -40,7 +40,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
         setShowAnimation(true);
         setTimeout(() => {
           setIsLoggedIn(true);
-          navigate("/");
+          navigate("/", { state: { fromLogin: true } });
         }, 2000); // 애니메이션 시간 (2초)
       } else {
         alert(data.message);
@@ -98,7 +98,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
     setShowAnimation(true);
     setTimeout(() => {
       setIsLoggedIn(true);
-      navigate("/");
+      navigate("/", { state: { fromLogin: true } });
     }, 2000); // 애니메이션 시간 (2초)
   };
 

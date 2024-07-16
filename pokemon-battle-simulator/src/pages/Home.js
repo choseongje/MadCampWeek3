@@ -1,18 +1,24 @@
 // src/pages/Home.js
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
-  const [showAnimation, setShowAnimation] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowAnimation(false);
-    }, 2000); // 애니메이션 시간 (2초)
-    return () => clearTimeout(timer);
-  }, []);
+    if (location.state && location.state.fromLogin) {
+      setShowAnimation(true);
+      const timer = setTimeout(() => {
+        setShowAnimation(false);
+        // 애니메이션이 끝나면 상태를 초기화
+        navigate("/", { state: {} });
+      }, 2000); // 애니메이션 시간 (2초)
+      return () => clearTimeout(timer);
+    }
+  }, [location, navigate]);
 
   const handleStartGame = () => {
     navigate("/select-pokemon");
