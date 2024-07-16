@@ -67,6 +67,7 @@ const SelectPokemon = () => {
 
   return (
     <div className="App">
+      <h2 className="selection-message">데려갈 포켓몬 3마리를 골라주세요!</h2>
       <div className="pokemon-container">
         {pokemonList.length > 0 ? (
           pokemonList.map((pokemon) => (

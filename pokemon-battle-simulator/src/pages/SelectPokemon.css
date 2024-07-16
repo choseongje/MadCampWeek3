@@ -9,6 +9,12 @@
   margin: 30px;
 }
 
+.selection-message {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
 .start-game-button {
   padding: 15px 30px;
   font-size: 18px;
@@ -20,7 +26,7 @@
   margin: 10px;
   grid-column: span 3;
   text-align: center;
-  color: black;
+  color: black; /* 버튼 텍스트 색상을 검은색으로 변경 */
 }
 
 .start-game-button:hover {
