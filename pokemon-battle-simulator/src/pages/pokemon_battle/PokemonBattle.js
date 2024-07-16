@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import unevolved from "../../data/unevolved";
+import legendary from "../../data/legendary"; // 전설의 포켓몬 데이터 가져오기
 import typeMapping from "../../data/typeMapping";
 import typeEffectiveness from "../../data/typeEffectiveness";
 import evolutionData from "../../data/evolutionData";
@@ -44,11 +45,12 @@ const PokemonBattle = () => {
 
   const fetchOpponentPokemon = async () => {
     const opponent = getRandomOpponent();
+    console.log(`Round: ${round}, Opponent ID: ${opponent.id}, Opponent Name: ${opponent.name}`);
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${opponent.id}`
     );
     const data = await response.json();
-    const koreanName = unevolved.find((p) => p.id === opponent.id).name;
+    const koreanName = opponent.name;
     setOpponentPokemon({ ...data, koreanName });
     setOpponentHp(getPokemonMaxHp(data));
     setShowSwitchPrompt(true);
@@ -79,8 +81,16 @@ const PokemonBattle = () => {
   };
 
   const getRandomOpponent = () => {
-    const randomIndex = Math.floor(Math.random() * unevolved.length);
-    return unevolved[randomIndex];
+    console.log(`Current Round: ${round}`);
+    if ((round+1) % 5 === 0 && round != 1) {
+      const randomIndex = Math.floor(Math.random() * legendary.length);
+      console.log("Selected Legendary Pokemon");
+      return legendary[randomIndex];
+    } else {
+      const randomIndex = Math.floor(Math.random() * unevolved.length);
+      console.log("Selected Unevolved Pokemon");
+      return unevolved[randomIndex];
+    }
   };
 
   const getTypeIconUrl = (type) => `/type_icons/${type.toLowerCase()}.svg`;

@@ -1,0 +1,41 @@
+// src/data/legendary.js
+const legendary = [
+    { id: 144, name: "프리져", type: "Ice/Flying" },
+    { id: 145, name: "썬더", type: "Electric/Flying" },
+    { id: 146, name: "파이어", type: "Fire/Flying" },
+    { id: 150, name: "뮤츠", type: "Psychic" },
+    { id: 151, name: "뮤", type: "Psychic" },
+    { id: 243, name: "라이코", type: "Electric" },
+    { id: 244, name: "앤테이", type: "Fire" },
+    { id: 245, name: "스이쿤", type: "Water" },
+    { id: 249, name: "루기아", type: "Psychic/Flying" },
+    { id: 250, name: "칠색조", type: "Fire/Flying" },
+    { id: 251, name: "세레비", type: "Psychic/Grass" },
+    { id: 377, name: "레지락", type: "Rock" },
+    { id: 378, name: "레지아이스", type: "Ice" },
+    { id: 379, name: "레지스틸", type: "Steel" },
+    { id: 380, name: "라티아스", type: "Dragon/Psychic" },
+    { id: 381, name: "라티오스", type: "Dragon/Psychic" },
+    { id: 382, name: "가이오가", type: "Water" },
+    { id: 383, name: "그란돈", type: "Ground" },
+    { id: 384, name: "레쿠쟈", type: "Dragon/Flying" },
+    { id: 385, name: "지라치", type: "Steel/Psychic" },
+    { id: 386, name: "테오키스", type: "Psychic" },
+    { id: 480, name: "유크시", type: "Psychic" },
+    { id: 481, name: "엠라이트", type: "Psychic" },
+    { id: 482, name: "아그놈", type: "Psychic" },
+    { id: 483, name: "디아루가", type: "Steel/Dragon" },
+    { id: 484, name: "펄기아", type: "Water/Dragon" },
+    { id: 485, name: "히드런", type: "Fire/Steel" },
+    { id: 486, name: "레지기가스", type: "Normal" },
+    { id: 487, name: "기라티나", type: "Ghost/Dragon" },
+    { id: 488, name: "크레세리아", type: "Psychic" },
+    { id: 489, name: "피오네", type: "Water" },
+    { id: 490, name: "마나피", type: "Water" },
+    { id: 491, name: "다크라이", type: "Dark" },
+    { id: 492, name: "쉐이미", type: "Grass" },
+    { id: 493, name: "아르세우스", type: "Normal" }
+  ];
+  
+  export default legendary;
+  
