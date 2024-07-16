@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import unevolved from "../../data/unevolved";
-import legendary from "../../data/legendary"; // 전설의 포켓몬 데이터 가져오기
 import typeMapping from "../../data/typeMapping";
 import typeEffectiveness from "../../data/typeEffectiveness";
-import evolutionData from "../../data/evolutionData";
 import "./PokemonBattle.css";
 import BattleContainer from "./BattleContainer";
 import Sidebar from "./Sidebar";
@@ -23,15 +21,16 @@ const PokemonBattle = () => {
   const [showSwitchPrompt, setShowSwitchPrompt] = useState(false);
   const [showPokemonSelect, setShowPokemonSelect] = useState(false);
   const [availablePokemon, setAvailablePokemon] = useState([]);
-  const [allPokemonData, setAllPokemonData] = useState([]);
   const [showTypeSelect, setShowTypeSelect] = useState(false);
-  const [pokemonRounds, setPokemonRounds] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [showTypeCalculator, setShowTypeCalculator] = useState(false);
   const [attacking, setAttacking] = useState(false);
   const [beingAttacked, setBeingAttacked] = useState(false);
   const [opponentAttacking, setOpponentAttacking] = useState(false);
   const [opponentBeingAttacked, setOpponentBeingAttacked] = useState(false);
+  const [showCatchPrompt, setShowCatchPrompt] = useState(false);
+  const [showReplacePrompt, setShowReplacePrompt] = useState(false);
+  const [recovered, setRecovered] = useState(false);
 
   useEffect(() => {
     fetchSelectedPokemon();
@@ -43,14 +42,22 @@ const PokemonBattle = () => {
     }
   }, [round]);
 
+  useEffect(() => {
+    if (recovered) {
+      recoverAllPokemon();
+      setRound((prevRound) => prevRound + 1);
+      fetchOpponentPokemon();
+      setRecovered(false);
+    }
+  }, [recovered]);
+
   const fetchOpponentPokemon = async () => {
     const opponent = getRandomOpponent();
-    console.log(`Round: ${round}, Opponent ID: ${opponent.id}, Opponent Name: ${opponent.name}`);
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${opponent.id}`
     );
     const data = await response.json();
-    const koreanName = opponent.name;
+    const koreanName = unevolved.find((p) => p.id === opponent.id).name;
     setOpponentPokemon({ ...data, koreanName });
     setOpponentHp(getPokemonMaxHp(data));
     setShowSwitchPrompt(true);
@@ -68,29 +75,14 @@ const PokemonBattle = () => {
       const koreanName = unevolved.find((p) => p.id === pokemon.id).name;
       return { ...pokemon, koreanName, currentHp: getPokemonMaxHp(pokemon) };
     });
-    setPokemonRounds(
-      dataWithKoreanNames.reduce((acc, pokemon) => {
-        acc[pokemon.id] = (acc[pokemon.id] || 0) + 1;
-        return acc;
-      }, {})
-    );
     setSelectedPokemonData(dataWithKoreanNames);
-    setAllPokemonData(dataWithKoreanNames);
     setSelectedHp(getPokemonMaxHp(dataWithKoreanNames[0]));
     setAvailablePokemon(dataWithKoreanNames.slice(0));
   };
 
   const getRandomOpponent = () => {
-    console.log(`Current Round: ${round}`);
-    if ((round+1) % 5 === 0 && round != 1) {
-      const randomIndex = Math.floor(Math.random() * legendary.length);
-      console.log("Selected Legendary Pokemon");
-      return legendary[randomIndex];
-    } else {
-      const randomIndex = Math.floor(Math.random() * unevolved.length);
-      console.log("Selected Unevolved Pokemon");
-      return unevolved[randomIndex];
-    }
+    const randomIndex = Math.floor(Math.random() * unevolved.length);
+    return unevolved[randomIndex];
   };
 
   const getTypeIconUrl = (type) => `/type_icons/${type.toLowerCase()}.svg`;
@@ -192,33 +184,8 @@ const PokemonBattle = () => {
               // 상대 포켓몬이 쓰러졌을 때의 메시지를 설정
               setMessage("상대 포켓몬이 쓰러졌습니다!");
               setTimeout(() => {
-                const evolvablePokemon = selectedPokemonData.filter(
-                  (pokemon) => {
-                    const evolution = evolutionData.find(
-                      (e) => e.id === pokemon.id
-                    );
-                    return evolution && pokemonRounds[pokemon.id] >= 10;
-                  }
-                );
-
-                // 진화할 수 있는 포켓몬이 있을 경우 진화 페이지로 이동
-                if (evolvablePokemon.length > 0) {
-                  navigate("/evolution", {
-                    state: {
-                      selectedPokemon: selectedPokemonData,
-                      round: round + 1,
-                      pokemonRounds,
-                    },
-                  });
-                } else {
-                  // 모든 포켓몬의 HP를 회복하고 다음 라운드로 진행
-                  recoverAllPokemon();
-                  setShowPokemonSelect(false);
-                  setShowSwitchPrompt(true);
-                  setShowTypeSelect(false);
-                  setRound((prevRound) => prevRound + 1);
-                  fetchOpponentPokemon();
-                }
+                setMessage("해당 포켓몬을 잡으시겠습니까?");
+                setShowCatchPrompt(true);
               }, 1000);
             } else {
               // 상대 포켓몬이 쓰러지지 않았을 경우 상대 포켓몬의 공격 실행
@@ -231,8 +198,6 @@ const PokemonBattle = () => {
                   opponentTypes[
                     Math.floor(Math.random() * opponentTypes.length)
                   ]; // 랜덤 타입 선택
-                console.log(opponentTypes);
-                console.log(opponentType);
                 const defenderTypes = selectedPokemonData[0].types.map(
                   (t) => t.type.name
                 );
@@ -312,11 +277,10 @@ const PokemonBattle = () => {
   };
 
   const recoverAllPokemon = () => {
-    const recoveredPokemon = allPokemonData.map((pokemon) => ({
+    const recoveredPokemon = selectedPokemonData.map((pokemon) => ({
       ...pokemon,
       currentHp: getPokemonMaxHp(pokemon),
     }));
-    setAllPokemonData(recoveredPokemon);
     setAvailablePokemon(
       recoveredPokemon.filter((pokemon) => pokemon.currentHp > 0)
     );
@@ -333,7 +297,10 @@ const PokemonBattle = () => {
           koreanName,
           currentHp: getPokemonMaxHp(data),
         };
-        setSelectedPokemonData([updatedPokemon]);
+        setSelectedPokemonData((prevData) => {
+          const newData = prevData.filter((p) => p.id !== updatedPokemon.id);
+          return [updatedPokemon, ...newData];
+        });
         setSelectedHp(getPokemonMaxHp(updatedPokemon));
         setAvailablePokemon(
           availablePokemon.filter((p) => p.id !== pokemon.id)
@@ -348,6 +315,10 @@ const PokemonBattle = () => {
         }, 1000);
       });
   };
+
+  useEffect(() => {
+    console.log(selectedPokemonData);
+  }, [selectedPokemonData]);
 
   const handleSwitchDecision = (decision) => {
     if (decision === "yes") {
@@ -390,6 +361,21 @@ const PokemonBattle = () => {
         selectedPokemon: pokemonData,
       },
     });
+  };
+
+  const handleCatch = () => {
+    setShowCatchPrompt(false);
+    setShowReplacePrompt(true);
+  };
+
+  const handleReplace = (pokemonToReplace) => {
+    const newPokemonList = selectedPokemonData.map((pokemon) =>
+      pokemon.id === pokemonToReplace.id ? opponentPokemon : pokemon
+    );
+    setSelectedPokemonData(newPokemonList);
+    setAvailablePokemon(newPokemonList);
+    setShowReplacePrompt(false);
+    setRecovered(true);
   };
 
   return (
@@ -450,6 +436,29 @@ const PokemonBattle = () => {
                 className="type-button"
               >
                 {getTypeNameInKorean(typeInfo.type.name)}
+              </button>
+            ))}
+          </div>
+        )}
+        {showCatchPrompt && (
+          <div className="catch-prompt">
+            <button onClick={handleCatch}>예</button>
+            <button
+              onClick={() => {
+                setShowCatchPrompt(false);
+                setRecovered(true);
+              }}
+            >
+              아니오
+            </button>
+          </div>
+        )}
+        {showReplacePrompt && (
+          <div className="pokemon-list">
+            <p>교체할 포켓몬을 선택하세요:</p>
+            {selectedPokemonData.map((pokemon) => (
+              <button key={pokemon.id} onClick={() => handleReplace(pokemon)}>
+                {pokemon.koreanName}
               </button>
             ))}
           </div>
