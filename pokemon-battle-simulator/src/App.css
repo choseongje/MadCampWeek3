@@ -1,4 +1,5 @@
 /* src/App.css */
+
 /* 화면 전체에 배경색을 적용 */
 html,
 body {
@@ -19,11 +20,4 @@ body {
   text-align: center;
 }
 
-/* 포켓몬 컨테이너 */
-.pokemon-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  justify-content: center;
-  margin: 30px;
-}
+/* 포켓몬 컨테이너는 여기서 제거합니다. */

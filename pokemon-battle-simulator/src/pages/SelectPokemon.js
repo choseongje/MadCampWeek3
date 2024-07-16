@@ -1,9 +1,10 @@
+// src/pages/SelectPokemon.js
 import React, { useEffect, useState } from "react";
 import unevolved from "../data/unevolved";
 import typeMapping from "../data/typeMapping";
 import PokemonCard from "../components/PokemonCard";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+import "./SelectPokemon.css";
 
 const SelectPokemon = () => {
   const [pokemonList, setPokemonList] = useState([]);
