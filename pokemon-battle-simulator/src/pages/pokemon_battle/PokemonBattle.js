@@ -106,12 +106,16 @@ const PokemonBattle = () => {
   };
 
   const getPokemonDefense = (pokemon) => {
-    const defenseStat = pokemon.stats.find((stat) => stat.stat.name === "defense");
+    const defenseStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "defense"
+    );
     const specialDefenseStat = pokemon.stats.find(
       (stat) => stat.stat.name === "special-defense"
     );
     const defense = defenseStat ? defenseStat.base_stat : 0;
-    const specialDefense = specialDefenseStat ? specialDefenseStat.base_stat : 0;
+    const specialDefense = specialDefenseStat
+      ? specialDefenseStat.base_stat
+      : 0;
     return (defense + specialDefense) / 2; // 평균 방어력
   };
 
@@ -122,7 +126,9 @@ const PokemonBattle = () => {
   };
 
   const getPokemonAttack = (pokemon) => {
-    const attackStat = pokemon.stats.find((stat) => stat.stat.name === "attack");
+    const attackStat = pokemon.stats.find(
+      (stat) => stat.stat.name === "attack"
+    );
     const specialAttackStat = pokemon.stats.find(
       (stat) => stat.stat.name === "special-attack"
     );
@@ -367,6 +373,7 @@ const PokemonBattle = () => {
 
   const handleCatch = () => {
     setShowCatchPrompt(false);
+    setMessage("교체할 포켓몬을 선택하세요.");
     setShowReplacePrompt(true);
   };
 
@@ -457,7 +464,6 @@ const PokemonBattle = () => {
         )}
         {showReplacePrompt && (
           <div className="pokemon-list">
-            <p>교체할 포켓몬을 선택하세요:</p>
             {selectedPokemonData.map((pokemon) => (
               <button key={pokemon.id} onClick={() => handleReplace(pokemon)}>
                 {pokemon.koreanName}

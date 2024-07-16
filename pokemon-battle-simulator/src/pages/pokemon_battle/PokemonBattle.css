@@ -13,6 +13,16 @@
 .type-button:hover {
   background-color: #45a049;
 }
+.type-select-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  position: fixed;
+  right: -1300%;
+  top: 90%;
+}
 
 .message {
   position: absolute;
@@ -63,7 +73,18 @@
   top: 90%;
 }
 
-.type-select-box {
+.switch-prompt {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  position: fixed;
+  right: -1450%;
+  top: 90%;
+}
+
+.catch-prompt {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -76,7 +97,8 @@
 
 .pokemon-list button,
 .switch-prompt button,
-.type-select-box button {
+.type-select-box button,
+.catch-prompt button {
   padding: 1px;
   font-size: 2.2em;
   background-color: #ffffff00;
@@ -89,7 +111,8 @@
 
 .pokemon-list button:hover,
 .switch-prompt button:hover,
-.type-select-box button:hover {
+.type-select-box button:hover,
+.catch-prompt button:hover {
   background-color: #ffffff00;
 }
 
