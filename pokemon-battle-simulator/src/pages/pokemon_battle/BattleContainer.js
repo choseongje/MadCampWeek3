@@ -14,6 +14,8 @@ const BattleContainer = ({
   opponentAttacking,
   opponentBeingAttacked,
 }) => {
+  const getTypeIconUrl = (type) => `/type_icons/${type.toLowerCase()}.svg`;
+
   return (
     <div className="battle-container">
       {opponentPokemon && selectedPokemonData ? (
@@ -27,7 +29,19 @@ const BattleContainer = ({
               } ${beingAttacked ? "being-attacked" : ""}`}
             />
             <div className="opponent-name-container">
-              <h2 className="opponent-name">{opponentPokemon.koreanName}</h2>
+              <span className="opponent-name">
+                {opponentPokemon.koreanName}
+              </span>
+              <div className="opponent-pokemon-types">
+                {opponentPokemon.types.map((typeInfo) => (
+                  <img
+                    key={typeInfo.type.name}
+                    src={getTypeIconUrl(typeInfo.type.name)}
+                    alt={getTypeNameInKorean(typeInfo.type.name)}
+                    className="pokemon-type-icon"
+                  />
+                ))}
+              </div>
             </div>
           </div>
           <div className="opponent-hp-bar">
@@ -41,7 +55,7 @@ const BattleContainer = ({
               }}
             />
           </div>
-          
+
           <div className="player-pokemon">
             <img
               src={selectedPokemonData[0].sprites.back_default}
@@ -51,7 +65,19 @@ const BattleContainer = ({
               }`}
             />
             <div className="player-name-container">
-              <h2 className="player-name">{selectedPokemonData[0].koreanName}</h2>
+              <span className="player-name">
+                {selectedPokemonData[0].koreanName}
+              </span>
+              <div className="player-pokemon-types">
+                {selectedPokemonData[0].types.map((typeInfo) => (
+                  <img
+                    key={typeInfo.type.name}
+                    src={getTypeIconUrl(typeInfo.type.name)}
+                    alt={getTypeNameInKorean(typeInfo.type.name)}
+                    className="pokemon-type-icon"
+                  />
+                ))}
+              </div>
             </div>
           </div>
           <div className="player-hp-bar">

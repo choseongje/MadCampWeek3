@@ -37,7 +37,7 @@
 
 .message-box {
   position: fixed;
-  top: 64%;
+  top: 54%;
   left: 45%;
   transform: translateX(-50%);
   width: auto;

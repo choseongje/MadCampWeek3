@@ -40,17 +40,23 @@
 
 .opponent-name-container {
   position: absolute;
-  top: 0%; /* 원하는 위치로 조정 */
-  right: 340%;
-  transform: translate(0%, -117%); /* 위치를 중앙 정렬 */
-  text-align: center;
-  width: 100px; /* 고정된 너비 설정 */
+  top: -35%; /* 원하는 위치로 조정 */
+  right: 330%;
+  display: flex;
+  align-items: center;
 }
 
 .opponent-name {
   font-size: 30px; /* 글씨 크기 조절 */
   white-space: nowrap; /* 줄바꿈 방지 */
   color: #000000; /* 글씨 색상 조절 */
+}
+
+.opponent-pokemon-types {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-left: 10px; /* 이름과 아이콘 사이의 간격 */
 }
 
 /* 내 포켓몬 */
@@ -90,17 +96,23 @@
 
 .player-name-container {
   position: absolute;
-  bottom: 63%; /* 원하는 위치로 조정 */
-  left: 50%;
-  transform: translate(500%, 0); /* 위치를 중앙 정렬 */
-  text-align: center;
-  width: 100px; /* 고정된 너비 설정 */
+  bottom: 73%; /* 원하는 위치로 조정 */
+  left: 290%;
+  display: flex;
+  align-items: center;
 }
 
 .player-name {
   font-size: 30px; /* 글씨 크기 조절 */
   white-space: nowrap; /* 줄바꿈 방지 */
   color: #000000; /* 글씨 색상 조절 */
+}
+
+.player-pokemon-types {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-left: 10px; /* 이름과 아이콘 사이의 간격 */
 }
 
 .player-hp-container {
@@ -155,4 +167,9 @@
   100% {
     opacity: 1;
   }
+}
+
+.pokemon-type-icon {
+  width: 36px; /* 아이콘 크기 설정 */
+  height: 36px; /* 아이콘 크기 설정 */
 }
