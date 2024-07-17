@@ -32,6 +32,7 @@ const PokemonBattle = () => {
   const [showCatchPrompt, setShowCatchPrompt] = useState(false);
   const [showReplacePrompt, setShowReplacePrompt] = useState(false);
   const [recovered, setRecovered] = useState(false);
+  const [isLegendaryRound, setIsLegendaryRound] = useState(false); // 전설의 포켓몬 라운드인지 확인
 
   useEffect(() => {
     fetchSelectedPokemon();
@@ -89,10 +90,12 @@ const PokemonBattle = () => {
     if ((round + 1) % 5 === 0 && round !== 1) {
       const randomIndex = Math.floor(Math.random() * legendary.length);
       console.log("Selected Legendary Pokemon");
+      setIsLegendaryRound(true); // 전설의 포켓몬 라운드임을 설정
       return legendary[randomIndex];
     } else {
       const randomIndex = Math.floor(Math.random() * unevolved.length);
       console.log("Selected Unevolved Pokemon");
+      setIsLegendaryRound(false); // 전설의 포켓몬 라운드가 아님을 설정
       return unevolved[randomIndex];
     }
   };
@@ -113,9 +116,7 @@ const PokemonBattle = () => {
       (stat) => stat.stat.name === "special-defense"
     );
     const defense = defenseStat ? defenseStat.base_stat : 0;
-    const specialDefense = specialDefenseStat
-      ? specialDefenseStat.base_stat
-      : 0;
+    const specialDefense = specialDefenseStat ? specialDefenseStat.base_stat : 0;
     return (defense + specialDefense) / 2; // 평균 방어력
   };
 
@@ -195,10 +196,18 @@ const PokemonBattle = () => {
             if (newHp === 0) {
               // 상대 포켓몬이 쓰러졌을 때의 메시지를 설정
               setMessage("상대 포켓몬이 쓰러졌습니다!");
-              setTimeout(() => {
-                setMessage("해당 포켓몬을 잡으시겠습니까?");
-                setShowCatchPrompt(true);
-              }, 1000);
+              if (!isLegendaryRound) {
+                // 전설의 포켓몬 라운드가 아닐 때만 잡기 메시지를 표시
+                setTimeout(() => {
+                  setMessage("해당 포켓몬을 잡으시겠습니까?");
+                  setShowCatchPrompt(true);
+                }, 1000);
+              } else {
+                // 전설의 포켓몬 라운드일 때는 포켓몬을 잡을 수 없으므로 다음 라운드로 진행
+                setTimeout(() => {
+                  setRecovered(true);
+                }, 1000);
+              }
             } else {
               // 상대 포켓몬이 쓰러지지 않았을 경우 상대 포켓몬의 공격 실행
               setTimeout(() => {
