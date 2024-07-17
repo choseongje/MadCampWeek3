@@ -148,10 +148,14 @@
     object-fit: contain;
   }
   
-  .opponent-attacking,
   .attacking {
     animation: attack-animation 0.5s infinite;
   }
+  
+  .opponent-attacking {
+    animation: opponent-attack-animation 0.5s infinite;
+  }
+  
   
   .being-attacked,
   .opponent-being-attacked {
@@ -160,13 +164,25 @@
   
   @keyframes attack-animation {
     0% {
-      transform: translateX(0);
+      transform: translate(0, 0);
     }
     50% {
-      transform: translateX(-10px);
+      transform: translate(450px, -200px); /* 오른쪽 위로 이동 */
     }
     100% {
-      transform: translateX(0);
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes opponent-attack-animation {
+    0% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(-450px, 200px); /* 왼쪽 아래로 이동 */
+    }
+    100% {
+      transform: translate(0, 0);
     }
   }
   
