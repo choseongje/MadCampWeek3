@@ -16,6 +16,19 @@ const BattleContainer = ({
 }) => {
   const getTypeIconUrl = (type) => `/type_icons/${type.toLowerCase()}.svg`;
 
+  const getHpBarClass = (hpPercentage) => {
+    if (hpPercentage > 50) return "hp-high";
+    if (hpPercentage >= 25) return "hp-medium";
+    return "hp-low";
+  };
+
+  const opponentHpPercentage = opponentPokemon
+    ? calculateHpPercentage(opponentHp, getPokemonMaxHp(opponentPokemon))
+    : 0;
+  const selectedHpPercentage = selectedPokemonData
+    ? calculateHpPercentage(selectedHp, getPokemonMaxHp(selectedPokemonData[0]))
+    : 0;
+
   return (
     <div className="battle-container">
       {opponentPokemon && selectedPokemonData ? (
@@ -46,12 +59,11 @@ const BattleContainer = ({
           </div>
           <div className="opponent-hp-bar">
             <div
-              className="opponent-hp-bar-inner"
+              className={`opponent-hp-bar-inner ${getHpBarClass(
+                opponentHpPercentage
+              )}`}
               style={{
-                width: `${calculateHpPercentage(
-                  opponentHp,
-                  getPokemonMaxHp(opponentPokemon)
-                )}%`,
+                width: `${opponentHpPercentage}%`,
               }}
             />
           </div>
@@ -82,12 +94,11 @@ const BattleContainer = ({
           </div>
           <div className="player-hp-bar">
             <div
-              className="player-hp-bar-inner"
+              className={`player-hp-bar-inner ${getHpBarClass(
+                selectedHpPercentage
+              )}`}
               style={{
-                width: `${calculateHpPercentage(
-                  selectedHp,
-                  getPokemonMaxHp(selectedPokemonData[0])
-                )}%`,
+                width: `${selectedHpPercentage}%`,
               }}
             />
           </div>

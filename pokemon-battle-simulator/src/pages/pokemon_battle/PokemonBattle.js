@@ -396,6 +396,12 @@ const PokemonBattle = () => {
     setRecovered(true);
   };
 
+  const getHpBarClass = (hpPercentage) => {
+    if (hpPercentage > 50) return "hp-high";
+    if (hpPercentage >= 25) return "hp-medium";
+    return "hp-low";
+  };
+
   return (
     <div className="App">
       <h1>포켓몬 배틀 - 라운드 {round}</h1>
@@ -413,6 +419,7 @@ const PokemonBattle = () => {
         beingAttacked={beingAttacked}
         opponentAttacking={opponentAttacking}
         opponentBeingAttacked={opponentBeingAttacked}
+        getHpBarClass={getHpBarClass}
       />
       <Sidebar
         showSidebar={showSidebar}

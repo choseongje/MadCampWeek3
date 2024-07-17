@@ -1,175 +1,189 @@
 .battle-container {
-  position: relative;
-  width: 1200px;
-  height: 720px;
-  background: url("../../assets/images/background.jpg") no-repeat center center;
-  background-size: 100%; /* 원하는 크기로 조정 */
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-/* 상대 포켓몬 */
-.opponent-pokemon {
-  position: absolute;
-  top: 20%; /* 원하는 위치로 조정 */
-  left: 66%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.opponent-hp-bar {
-  position: absolute;
-  top: 16.9%; /* 원하는 위치로 조정 */
-  right: 58.3%;
-  width: 25%;
-  background-color: #ccc;
-  border: 1px solid #000;
-  margin-bottom: 10px;
-}
-
-.opponent-hp-bar-inner {
-  height: 20px;
-  background-color: rgba(0, 255, 140, 0.5); /* 투명도 조절 */
-}
-
-/* HP 수치를 표시하지 않도록 설정 */
-.opponent-hp-bar-inner::after {
-  content: "";
-}
-
-.opponent-name-container {
-  position: absolute;
-  top: -35%; /* 원하는 위치로 조정 */
-  right: 330%;
-  display: flex;
-  align-items: center;
-}
-
-.opponent-name {
-  font-size: 30px; /* 글씨 크기 조절 */
-  white-space: nowrap; /* 줄바꿈 방지 */
-  color: #000000; /* 글씨 색상 조절 */
-}
-
-.opponent-pokemon-types {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  margin-left: 10px; /* 이름과 아이콘 사이의 간격 */
-}
-
-/* 내 포켓몬 */
-.player-pokemon {
-  position: absolute;
-  bottom: 25%; /* 원하는 위치로 조정 */
-  left: 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.player-hp-bar {
-  position: absolute;
-  bottom: 39%; /* 원하는 위치로 조정 */
-  left: 67.5%;
-  width: 25%;
-  background-color: #ccc;
-  border: 1px solid #000;
-  margin-bottom: 10px;
-}
-
-.player-hp-bar-inner {
-  height: 20px;
-  background-color: rgba(0, 255, 140, 0.5); /* 투명도 조절 */
-}
-
-/* 내 포켓몬 HP 텍스트 위치 지정 */
-.player-hp-text {
-  position: absolute;
-  bottom: 34.7%; /* 원하는 위치로 조정 */
-  left: 78%;
-  font-size: 23px;
-  color: #000;
-  white-space: nowrap;
-}
-
-.player-name-container {
-  position: absolute;
-  bottom: 73%; /* 원하는 위치로 조정 */
-  left: 290%;
-  display: flex;
-  align-items: center;
-}
-
-.player-name {
-  font-size: 30px; /* 글씨 크기 조절 */
-  white-space: nowrap; /* 줄바꿈 방지 */
-  color: #000000; /* 글씨 색상 조절 */
-}
-
-.player-pokemon-types {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  margin-left: 10px; /* 이름과 아이콘 사이의 간격 */
-}
-
-.player-hp-container {
-  position: absolute;
-  bottom: 30%; /* 원하는 위치로 조정 */
-  left: 50%;
-  transform: translate(-50%, 0); /* 위치를 중앙 정렬 */
-  text-align: center;
-}
-
-.player-hp {
-  font-size: 20px; /* 글씨 크기 조절 */
-  color: #000; /* 글씨 색상 조절 */
-}
-
-.opponent-image,
-.player-image {
-  width: 200px;
-  height: 200px;
-  object-fit: contain;
-}
-
-.opponent-attacking,
-.attacking {
-  animation: attack-animation 0.5s infinite;
-}
-
-.being-attacked,
-.opponent-being-attacked {
-  animation: being-attacked-animation 0.5s infinite;
-}
-
-@keyframes attack-animation {
-  0% {
-    transform: translateX(0);
+    position: relative;
+    width: 1200px;
+    height: 720px;
+    background: url("../../assets/images/background.jpg") no-repeat center center;
+    background-size: 100%; /* 원하는 크기로 조정 */
+    padding: 20px;
+    box-sizing: border-box;
   }
-  50% {
-    transform: translateX(-10px);
+  
+  /* 상대 포켓몬 */
+  .opponent-pokemon {
+    position: absolute;
+    top: 20%; /* 원하는 위치로 조정 */
+    left: 66%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  100% {
-    transform: translateX(0);
+  
+  .opponent-hp-bar {
+    position: absolute;
+    top: 16.9%; /* 원하는 위치로 조정 */
+    right: 58.3%;
+    width: 25%;
+    background-color: #ccc;
+    border: 1px solid #000;
+    margin-bottom: 10px;
   }
-}
-
-@keyframes being-attacked-animation {
-  0% {
-    opacity: 1;
+  
+  .opponent-hp-bar-inner {
+    height: 20px;
+    transition: width 0.3s, background-color 0.3s;
   }
-  50% {
-    opacity: 0.5;
+  
+  /* 상대 포켓몬 HP 색상 */
+  .hp-high {
+    background-color: green;
   }
-  100% {
-    opacity: 1;
+  
+  .hp-medium {
+    background-color: yellow;
   }
-}
-
-.pokemon-type-icon {
-  width: 36px; /* 아이콘 크기 설정 */
-  height: 36px; /* 아이콘 크기 설정 */
-}
+  
+  .hp-low {
+    background-color: red;
+  }
+  
+  /* HP 수치를 표시하지 않도록 설정 */
+  .opponent-hp-bar-inner::after {
+    content: "";
+  }
+  
+  .opponent-name-container {
+    position: absolute;
+    top: -35%; /* 원하는 위치로 조정 */
+    right: 330%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .opponent-name {
+    font-size: 30px; /* 글씨 크기 조절 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    color: #000000; /* 글씨 색상 조절 */
+  }
+  
+  .opponent-pokemon-types {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-left: 10px; /* 이름과 아이콘 사이의 간격 */
+  }
+  
+  /* 내 포켓몬 */
+  .player-pokemon {
+    position: absolute;
+    bottom: 25%; /* 원하는 위치로 조정 */
+    left: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .player-hp-bar {
+    position: absolute;
+    bottom: 39%; /* 원하는 위치로 조정 */
+    left: 67.5%;
+    width: 25%;
+    background-color: #ccc;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+  }
+  
+  .player-hp-bar-inner {
+    height: 20px;
+    transition: width 0.3s, background-color 0.3s;
+  }
+  
+  /* 내 포켓몬 HP 텍스트 위치 지정 */
+  .player-hp-text {
+    position: absolute;
+    bottom: 34.7%; /* 원하는 위치로 조정 */
+    left: 78%;
+    font-size: 23px;
+    color: #000;
+    white-space: nowrap;
+  }
+  
+  .player-name-container {
+    position: absolute;
+    bottom: 73%; /* 원하는 위치로 조정 */
+    left: 290%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .player-name {
+    font-size: 30px; /* 글씨 크기 조절 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    color: #000000; /* 글씨 색상 조절 */
+  }
+  
+  .player-pokemon-types {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-left: 10px; /* 이름과 아이콘 사이의 간격 */
+  }
+  
+  .player-hp-container {
+    position: absolute;
+    bottom: 30%; /* 원하는 위치로 조정 */
+    left: 50%;
+    transform: translate(-50%, 0); /* 위치를 중앙 정렬 */
+    text-align: center;
+  }
+  
+  .player-hp {
+    font-size: 20px; /* 글씨 크기 조절 */
+    color: #000; /* 글씨 색상 조절 */
+  }
+  
+  .opponent-image,
+  .player-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+  }
+  
+  .opponent-attacking,
+  .attacking {
+    animation: attack-animation 0.5s infinite;
+  }
+  
+  .being-attacked,
+  .opponent-being-attacked {
+    animation: being-attacked-animation 0.5s infinite;
+  }
+  
+  @keyframes attack-animation {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-10px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes being-attacked-animation {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .pokemon-type-icon {
+    width: 36px; /* 아이콘 크기 설정 */
+    height: 36px; /* 아이콘 크기 설정 */
+  }
+  
